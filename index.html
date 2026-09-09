@@ -151,6 +151,14 @@
   .quiz-score{ text-align:center; padding: 26px 10px; }
   .quiz-score .big{ font-family:'Fraunces', serif; font-size:40px; color: var(--ink); }
 
+
+  .study-progress{height:8px;background:#e8e0cd;border-radius:999px;overflow:hidden;margin:12px 0 8px}.study-progress-fill{height:100%;background:var(--sage-dim);transition:width .3s ease}
+  .study-meta{display:flex;justify-content:space-between;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a715c}
+  .learn-stage{display:grid;gap:10px;margin-top:12px}.stage-chip{font-size:11px;color:#6b6455;background:#efe9d6;border-radius:999px;padding:5px 9px;display:inline-block}
+  .recall-box{margin-top:12px;text-align:left}.recall-box input{font-size:16px;text-align:center}.recall-feedback{margin-top:7px;font-size:12px;color:#6b6455}.mini-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}.btn-small{padding:8px 12px;font-size:12px}
+  .beginner-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.beginner-summary .summary-box{background:#efe9d6;border-radius:9px;padding:10px;text-align:center}.summary-box b{display:block;font-size:20px}.summary-box span{font-size:11px;color:#6b6455}
+  @media(max-width:600px){.beginner-summary{grid-template-columns:1fr 1fr 1fr}.study-meta{font-size:10px}}
+
   /* Roadmap */
   .phase-block{ margin-bottom:28px; }
   .phase-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:3px; gap:10px; }
@@ -211,19 +219,47 @@
     <section id="tab-beginner" class="active">
       <div class="beginner-box">
         <h2 class="beginner-title">Học từ vựng từ số 0 🌱</h2>
-        <p class="beginner-sub">Bạn chưa biết tiếng Anh cũng được. Mỗi ngày chỉ cần học khoảng <b>10 từ</b>: nghe cách đọc → nhìn nghĩa → xem ví dụ → tự nhớ lại. Không cần học hết 300 từ một lúc.</p>
-        <div class="today-grid"><div class="today-stat"><b id="todayNew">0</b><span>từ nên học hôm nay</span></div><div class="today-stat"><b id="todayKnown">0</b><span>từ đã nhớ (level 4–5)</span></div></div>
+        <p class="beginner-sub">Mỗi ngày học nhẹ nhàng: <b>từ mới → nghe → nhìn → tự nhớ → trả lời</b>. Không cần cố học hết 300 từ một lúc.</p>
+        <div class="today-grid">
+          <div class="today-stat"><b id="todayNew">0</b><span>từ nên học hôm nay</span></div>
+          <div class="today-stat"><b id="todayKnown">0</b><span>từ đã vững (level 4–5)</span></div>
+        </div>
+        <div class="beginner-summary">
+          <div class="summary-box"><b id="todayDone">0</b><span>đã học hôm nay</span></div>
+          <div class="summary-box"><b id="todayCorrect">0</b><span>nhớ đúng</span></div>
+          <div class="summary-box"><b id="todayReview">0</b><span>cần ôn</span></div>
+        </div>
         <div class="streak" id="studyStreak">🔥 Ngày học liên tiếp: 0</div>
       </div>
-      <div id="beginnerSession"><div class="learn-card"><div class="learn-topic" id="learnTopic"></div><div class="learn-vi" id="learnVi"></div><div class="learn-en" id="learnEn">•••</div><div class="learn-ipa" id="learnIpa"></div><button class="btn btn-ghost audio-btn" id="speakBtn">🔊 Nghe cách đọc</button><div class="learn-example" id="learnExample"></div><div class="beginner-note">Mẹo: đọc từ tiếng Anh thành tiếng 2–3 lần. Sau đó thử nhớ lại mà không nhìn.</div></div>
+
+      <div id="beginnerSession">
+        <div class="study-meta"><span id="learnCounter">Từ 1 / 10</span><span id="learnType">Từ mới</span></div>
+        <div class="study-progress"><div class="study-progress-fill" id="studyProgressFill" style="width:0%"></div></div>
+        <div class="learn-card">
+          <div class="learn-topic" id="learnTopic"></div>
+          <div class="learn-vi" id="learnVi"></div>
+          <div class="stage-chip" id="learnStage">Bước 1/3 · Nghe và nhìn nghĩa</div>
+          <div class="learn-en" id="learnEn">•••</div>
+          <div class="learn-ipa" id="learnIpa"></div>
+          <div class="mini-actions">
+            <button class="btn btn-ghost btn-small" id="speakBtn">🔊 Nghe từ</button>
+            <button class="btn btn-ghost btn-small" id="slowSpeakBtn">🐢 Nghe chậm</button>
+          </div>
+          <div class="learn-example" id="learnExample">Trước tiên hãy nghe và thử đoán từ tiếng Anh.</div>
+          <div class="recall-box" id="recallBox" style="display:none;">
+            <label>Thử tự gõ lại (không bắt buộc)</label>
+            <input type="text" id="beginnerInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Gõ từ tiếng Anh..."><div class="recall-feedback" id="beginnerInputFeedback"></div>
+          </div>
+          <div class="beginner-note">Mẹo: đọc to từ 2–3 lần. Sau đó nhìn nghĩa tiếng Việt và thử nhớ lại từ tiếng Anh.</div>
+        </div>
         <div class="btn-row"><button class="btn btn-primary" id="revealBtn" style="width:100%;">👀 Hiện từ tiếng Anh</button></div>
         <div class="learn-actions" id="learnActions" style="display:none;"><button class="btn btn-again" id="againBtn">↻ Chưa nhớ</button><button class="btn btn-easy" id="easyBtn">✓ Đã nhớ</button></div>
       </div>
-      <div id="beginnerDone" class="session-done" style="display:none;"><div class="big" id="beginnerDoneMsg"></div><p class="section-hint">Tốt lắm! Hôm nay chỉ cần vậy. Ngày mai quay lại học tiếp.</p><button class="btn btn-primary" id="beginnerRestart">Học lại 10 từ</button></div>
+      <div id="beginnerDone" class="session-done" style="display:none;"><div class="big" id="beginnerDoneMsg"></div><p class="section-hint">Bạn không cần học thêm ngay. Ôn đều mỗi ngày sẽ hiệu quả hơn học dồn.</p><button class="btn btn-primary" id="beginnerRestart">Học lượt hôm nay</button></div>
     </section>
 
     <!-- ROADMAP TAB -->
-    <section id="tab-roadmap" class="active">
+    <section id="tab-roadmap">
       <h2>Lộ trình học của bạn</h2>
       <p class="section-hint">Mục tiêu 900 từ trong 6 tháng. Bấm vào một tuần để xem/thêm từ của tuần đó.</p>
       <div class="btn-row" style="margin-bottom:8px;">
@@ -3807,17 +3843,103 @@
   });
 
 
-  // ---------- Beginner daily lesson ----------
-  let beginnerQueue=[], beginnerIdx=0, beginnerDoneCount=0, beginnerRevealed=false;
-  function todayKey(){return new Date().toISOString().slice(0,10)}
-  function updateStudyStreak(){const key='vocab:study:last', sk='vocab:study:streak', today=todayKey(), last=localStorage.getItem(key); let streak=Number(localStorage.getItem(sk)||0); if(last!==today){if(last){const diff=Math.round((new Date(today+'T00:00:00')-new Date(last+'T00:00:00'))/86400000); streak=diff===1?streak+1:1}else streak=1; localStorage.setItem(key,today);localStorage.setItem(sk,String(streak));} const el=document.getElementById('studyStreak');if(el)el.textContent=`🔥 Ngày học liên tiếp: ${streak}`}
-  function refreshBeginnerStats(){const known=words.filter(w=>(w.level||0)>=4).length;const due=words.filter(w=>(w.level||0)<4);document.getElementById('todayKnown').textContent=known;document.getElementById('todayNew').textContent=Math.min(10,due.length)}
-  function startBeginner(){const pool=words.filter(w=>(w.level||0)<4).sort((a,b)=>(a.level||0)-(b.level||0)).slice(0,10);beginnerQueue=shuffle(pool);beginnerIdx=0;beginnerDoneCount=0;document.getElementById('beginnerSession').style.display=pool.length?'block':'none';document.getElementById('beginnerDone').style.display=pool.length?'none':'block';if(!pool.length){document.getElementById('beginnerDoneMsg').textContent='🎉 Bạn đã đạt level 4+ cho toàn bộ từ hiện có!';return}showBeginnerWord();updateStudyStreak()}
-  function showBeginnerWord(){const w=beginnerQueue[beginnerIdx];beginnerRevealed=false;document.getElementById('learnTopic').textContent=wordTopic(w);document.getElementById('learnVi').textContent=w.vi;document.getElementById('learnEn').textContent='•••';document.getElementById('learnIpa').textContent='';document.getElementById('learnExample').textContent='Ví dụ sẽ hiện sau khi bạn xem từ tiếng Anh.';document.getElementById('revealBtn').style.display='block';document.getElementById('learnActions').style.display='none';document.getElementById('revealBtn').textContent=`👀 Hiện từ tiếng Anh (${beginnerIdx+1}/10)`}
-  document.getElementById('revealBtn').addEventListener('click',()=>{const w=beginnerQueue[beginnerIdx];beginnerRevealed=true;document.getElementById('learnEn').textContent=w.en;document.getElementById('learnIpa').textContent=w.ipa||'';document.getElementById('learnExample').textContent=w.example||'';document.getElementById('revealBtn').style.display='none';document.getElementById('learnActions').style.display='grid'});
-  document.getElementById('speakBtn').addEventListener('click',()=>{if(!beginnerQueue.length)return;const w=beginnerQueue[beginnerIdx];if('speechSynthesis' in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w.en);u.lang='en-US';u.rate=.78;speechSynthesis.speak(u)}else alert('Trình duyệt này chưa hỗ trợ đọc thành tiếng.')});
-  async function beginnerAnswer(ok){if(!beginnerRevealed)return;const w=beginnerQueue[beginnerIdx],target=words.find(x=>x.id===w.id);if(target)target.level=Math.max(0,Math.min(5,(target.level||0)+(ok?1:-1)));await saveWords();beginnerDoneCount+=ok?1:0;beginnerIdx++;if(beginnerIdx>=beginnerQueue.length){document.getElementById('beginnerSession').style.display='none';document.getElementById('beginnerDone').style.display='block';document.getElementById('beginnerDoneMsg').textContent=`🎉 Hoàn thành ${beginnerQueue.length} từ hôm nay — nhớ đúng ${beginnerDoneCount} từ.`;refreshAll()}else{showBeginnerWord();refreshBeginnerStats()}}
-  document.getElementById('againBtn').addEventListener('click',()=>beginnerAnswer(false));document.getElementById('easyBtn').addEventListener('click',()=>beginnerAnswer(true));document.getElementById('beginnerRestart').addEventListener('click',startBeginner);
+  // ---------- Beginner daily lesson: light spaced repetition ----------
+  let beginnerQueue=[], beginnerIdx=0, beginnerDoneCount=0, beginnerCorrectCount=0, beginnerRevealed=false;
+  const REVIEW_DAYS = [0, 1, 3, 7, 14, 30];
+  function dateKey(d=new Date()){ return d.toISOString().slice(0,10); }
+  function addDays(dateStr, days){ const d=new Date(dateStr+'T00:00:00'); d.setDate(d.getDate()+days); return dateKey(d); }
+  function ensureReviewFields(w){ if(typeof w.level!=='number') w.level=0; if(!w.lastReviewed) w.lastReviewed=''; if(!w.nextReview) w.nextReview=w.level>0?addDays(dateKey(),REVIEW_DAYS[Math.min(5,w.level)]):dateKey(); return w; }
+  function recordStudy(correct){
+    const today=dateKey();
+    const k='vocab:study:'+today;
+    let s={done:0,correct:0}; try{s=JSON.parse(localStorage.getItem(k)||'{}')||s}catch(e){}
+    s.done=(s.done||0)+1; s.correct=(s.correct||0)+(correct?1:0); localStorage.setItem(k,JSON.stringify(s));
+  }
+  function studyStats(){
+    const today=dateKey(); let s={done:0,correct:0}; try{s=JSON.parse(localStorage.getItem('vocab:study:'+today)||'{}')||s}catch(e){}
+    const known=words.filter(w=>(w.level||0)>=4).length;
+    const reviewDue=words.filter(w=>(w.nextReview||today)<=today && (w.level||0)>0).length;
+    const newWords=words.filter(w=>(w.level||0)===0).length;
+    const toStudy=Math.min(10, reviewDue + newWords);
+    const els={todayNew:toStudy,todayKnown:known,todayDone:s.done||0,todayCorrect:s.correct||0,todayReview:reviewDue};
+    Object.entries(els).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=val});
+  }
+  function updateStudyStreak(){
+    const today=dateKey(); let streak=0;
+    for(let i=0;i<365;i++){ const k=addDays(today,-i); let s={}; try{s=JSON.parse(localStorage.getItem('vocab:study:'+k)||'{}')||{}}catch(e){} if((s.done||0)>0) streak++; else break; }
+    const el=document.getElementById('studyStreak'); if(el) el.textContent=`🔥 Ngày học liên tiếp: ${streak}`;
+  }
+  function chooseBeginnerPool(){
+    const today=dateKey(); words.forEach(ensureReviewFields);
+    const due=shuffle(words.filter(w=>(w.level||0)>0 && (w.nextReview||today)<=today)).sort((a,b)=>(a.level||0)-(b.level||0));
+    const fresh=shuffle(words.filter(w=>(w.level||0)===0));
+    return [...due,...fresh].slice(0,10);
+  }
+  function startBeginner(){
+    words.forEach(ensureReviewFields);
+    beginnerQueue=chooseBeginnerPool(); beginnerIdx=0; beginnerDoneCount=0; beginnerCorrectCount=0;
+    document.getElementById('beginnerSession').style.display=beginnerQueue.length?'block':'none';
+    document.getElementById('beginnerDone').style.display=beginnerQueue.length?'none':'block';
+    if(!beginnerQueue.length){ document.getElementById('beginnerDoneMsg').textContent='🎉 Bạn đã hoàn thành toàn bộ từ hiện có!'; studyStats(); return; }
+    showBeginnerWord(); studyStats(); updateStudyStreak();
+  }
+  function showBeginnerWord(){
+    const w=beginnerQueue[beginnerIdx]; beginnerRevealed=false;
+    document.getElementById('learnTopic').textContent=wordTopic(w);
+    document.getElementById('learnVi').textContent=w.vi;
+    document.getElementById('learnEn').textContent='•••';
+    document.getElementById('learnIpa').textContent='';
+    document.getElementById('learnExample').textContent='Bước 1: nghe từ (nếu muốn), sau đó tự đoán từ tiếng Anh.';
+    document.getElementById('learnStage').textContent='Bước 1/3 · Nghe và nhớ';
+    document.getElementById('revealBtn').style.display='block';
+    document.getElementById('learnActions').style.display='none';
+    document.getElementById('recallBox').style.display='none';
+    document.getElementById('beginnerInput').value='';
+    document.getElementById('beginnerInputFeedback').textContent='';
+    document.getElementById('learnCounter').textContent=`Từ ${beginnerIdx+1} / ${beginnerQueue.length}`;
+    document.getElementById('learnType').textContent=(w.level||0)===0?'Từ mới':'Ôn lại';
+    document.getElementById('studyProgressFill').style.width=((beginnerIdx)/beginnerQueue.length*100)+'%';
+  }
+  function speakWord(rate=.78){
+    const w=beginnerQueue[beginnerIdx]; if(!w)return;
+    if('speechSynthesis' in window){ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(w.en); u.lang='en-US'; u.rate=rate; speechSynthesis.speak(u); }
+    else alert('Trình duyệt này chưa hỗ trợ đọc thành tiếng.');
+  }
+  document.getElementById('speakBtn').addEventListener('click',()=>speakWord(.78));
+  document.getElementById('slowSpeakBtn').addEventListener('click',()=>speakWord(.55));
+  document.getElementById('revealBtn').addEventListener('click',()=>{
+    const w=beginnerQueue[beginnerIdx]; beginnerRevealed=true;
+    document.getElementById('learnEn').textContent=w.en; document.getElementById('learnIpa').textContent=w.ipa||'';
+    document.getElementById('learnExample').textContent=w.example||'';
+    document.getElementById('learnStage').textContent='Bước 2/3 · Đọc từ + nghe lại';
+    document.getElementById('revealBtn').style.display='none'; document.getElementById('learnActions').style.display='grid'; document.getElementById('recallBox').style.display='block';
+    document.getElementById('beginnerInput').focus();
+  });
+  document.getElementById('beginnerInput').addEventListener('input',()=>{
+    const w=beginnerQueue[beginnerIdx], val=normalizeAnswer(document.getElementById('beginnerInput').value), correct=normalizeAnswer(w.en);
+    const el=document.getElementById('beginnerInputFeedback');
+    if(!val){el.textContent='';return;} el.textContent=val===correct?'✓ Gõ đúng!':'Hãy nhìn lại từ phía trên và thử lại.';
+  });
+  async function beginnerAnswer(ok){
+    if(!beginnerRevealed)return;
+    const w=beginnerQueue[beginnerIdx], target=words.find(x=>x.id===w.id), today=dateKey();
+    if(target){ ensureReviewFields(target); target.level=Math.max(0,Math.min(5,(target.level||0)+(ok?1:-1))); target.lastReviewed=today; target.nextReview=addDays(today,REVIEW_DAYS[Math.min(5,target.level||0)]); }
+    recordStudy(ok); if(ok){beginnerDoneCount++;beginnerCorrectCount++;} else {beginnerCorrectCount+=0;}
+    await saveWords(); beginnerIdx++;
+    if(beginnerIdx>=beginnerQueue.length){ document.getElementById('beginnerSession').style.display='none';document.getElementById('beginnerDone').style.display='block';document.getElementById('beginnerDoneMsg').textContent=`🎉 Hoàn thành ${beginnerQueue.length} từ — nhớ đúng ${beginnerDoneCount} từ.`;document.getElementById('studyProgressFill').style.width='100%';refreshAll();studyStats();updateStudyStreak(); }
+    else { showBeginnerWord(); refreshBeginnerStats(); studyStats(); }
+  }
+  document.getElementById('againBtn').addEventListener('click',()=>beginnerAnswer(false));
+  document.getElementById('easyBtn').addEventListener('click',()=>beginnerAnswer(true));
+  document.getElementById('beginnerRestart').addEventListener('click',startBeginner);
+  document.addEventListener('keydown',(e)=>{
+    if(document.getElementById('tab-beginner').classList.contains('active')){
+      if(e.key===' ' && beginnerQueue.length && !beginnerRevealed){e.preventDefault();document.getElementById('revealBtn').click();}
+      else if(e.key==='ArrowLeft' && beginnerRevealed){e.preventDefault();document.getElementById('againBtn').click();}
+      else if(e.key==='ArrowRight' && beginnerRevealed){e.preventDefault();document.getElementById('easyBtn').click();}
+    }
+  });
+  function refreshBeginnerStats(){studyStats();updateStudyStreak();}
   // ---------- Quiz ----------
   let quizQueue = [], quizIdx = 0, quizScore = 0, quizDir = 'en2vi';
   document.getElementById('quizStart').addEventListener('click', ()=>{
@@ -3898,6 +4020,8 @@
         const existingKeys = new Set(words.map(w=>(w.en+'|'+w.weekId).toLowerCase()));
         incoming.forEach(w=>{
           if(!w.id) w.id = uid();
+          if(typeof w.level !== 'number') w.level = 0;
+          ensureReviewFields(w);
           const key = (w.en+'|'+w.weekId).toLowerCase();
           if(!existingKeys.has(key)){ words.push(w); existingKeys.add(key); }
         });
@@ -3920,6 +4044,8 @@
     await loadWords();
     refreshAll();
     await tryRestoreFolder();
+    words.forEach(ensureReviewFields);
+    await saveWords();
     startBeginner();
   })();
 })();
