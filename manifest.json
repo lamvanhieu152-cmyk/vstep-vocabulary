@@ -1,32 +1,12 @@
 {
-  "name": "Sổ Từ Vựng VSTEP — Lâm Văn Hiệu",
-  "short_name": "VSTEP Vocab",
-  "lang": "vi",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "background_color": "#16292b",
-  "theme_color": "#16292b",
-  "description": "Ứng dụng học từ vựng VSTEP cho người mới bắt đầu.",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ],
-  "version": "3.0"
+  "name":"Sổ Từ Vựng VSTEP — Lâm Văn Hiệu",
+  "short_name":"VSTEP Vocabulary",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#f6f8fc",
+  "theme_color":"#2563eb",
+  "icons":[
+    {"src":"icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"icon-512.png","sizes":"512x512","type":"image/png"}
+  ]
 }
