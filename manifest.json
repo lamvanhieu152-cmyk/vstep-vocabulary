@@ -1,0 +1,12 @@
+{
+  "name": "Sổ Từ Vựng VSTEP",
+  "short_name": "VSTEP Vocab",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#16292b",
+  "theme_color": "#16292b",
+  "description": "Ứng dụng học từ vựng VSTEP cho người mới bắt đầu.",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

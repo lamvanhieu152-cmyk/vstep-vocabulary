@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sổ Từ Vựng — Lộ trình 900 từ (bản chạy offline)</title>
+<title>Sổ Từ Vựng VSTEP — Học từ cho người mới bắt đầu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
@@ -176,7 +176,17 @@
     .tab-btn{ padding:9px 11px 11px; font-size:11px; }
     .week-desc{ display:none; }
   }
+
+  /* Beginner mode */
+  .beginner-box{background:#fffdf7;border:1.5px solid #d9d0b8;border-radius:10px;padding:18px;margin-bottom:18px}
+  .beginner-title{font-family:'Fraunces',serif;font-size:25px;margin:0 0 5px}.beginner-sub{color:#6b6455;font-size:13px;line-height:1.6;margin:0 0 14px}
+  .today-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}.today-stat{background:#efe9d6;border-radius:9px;padding:12px}.today-stat b{display:block;font-size:22px;color:var(--ink)}.today-stat span{font-size:12px;color:#6b6455}
+  .learn-card{border:1.5px solid #d9d0b8;border-radius:12px;padding:20px;background:#fffdf7;text-align:center}.learn-topic{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8f742a;text-transform:uppercase;letter-spacing:.08em}.learn-vi{font-family:'Fraunces',serif;font-size:25px;margin:12px 0 5px}.learn-en{font-size:28px;font-weight:700;margin:5px 0}.learn-ipa{font-family:'IBM Plex Mono',monospace;color:#8f742a;font-size:13px;margin-bottom:12px}.learn-example{color:#6b6455;font-size:14px;line-height:1.55;padding:12px;border-left:3px solid #d4a62a;background:#f4efe3;text-align:left;border-radius:0 7px 7px 0}.learn-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.btn-easy{background:#3f5c50;color:#fff}.btn-again{background:#c1554d;color:#fff}.audio-btn{margin:6px 0 10px}.beginner-note{font-size:12px;color:#6b6455;line-height:1.6;margin-top:12px}.streak{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8f742a;margin-top:8px}
+  @media(max-width:600px){.today-grid{grid-template-columns:1fr 1fr}.learn-actions{grid-template-columns:1fr}.learn-en{font-size:25px}}
 </style>
+<meta name="theme-color" content="#16292b">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 </head>
 <body>
 <div class="app">
@@ -189,13 +199,29 @@
   </header>
 
   <nav class="tabs">
-    <button class="tab-btn active" data-tab="roadmap">Lộ trình</button>
+    <button class="tab-btn active" data-tab="beginner">Bắt đầu</button>
+    <button class="tab-btn" data-tab="roadmap">Lộ trình</button>
     <button class="tab-btn" data-tab="list">Danh sách</button>
     <button class="tab-btn" data-tab="flash">Ôn tập</button>
     <button class="tab-btn" data-tab="quiz">Kiểm tra</button>
   </nav>
 
   <main>
+    <!-- BEGINNER TAB -->
+    <section id="tab-beginner" class="active">
+      <div class="beginner-box">
+        <h2 class="beginner-title">Học từ vựng từ số 0 🌱</h2>
+        <p class="beginner-sub">Bạn chưa biết tiếng Anh cũng được. Mỗi ngày chỉ cần học khoảng <b>10 từ</b>: nghe cách đọc → nhìn nghĩa → xem ví dụ → tự nhớ lại. Không cần học hết 300 từ một lúc.</p>
+        <div class="today-grid"><div class="today-stat"><b id="todayNew">0</b><span>từ nên học hôm nay</span></div><div class="today-stat"><b id="todayKnown">0</b><span>từ đã nhớ (level 4–5)</span></div></div>
+        <div class="streak" id="studyStreak">🔥 Ngày học liên tiếp: 0</div>
+      </div>
+      <div id="beginnerSession"><div class="learn-card"><div class="learn-topic" id="learnTopic"></div><div class="learn-vi" id="learnVi"></div><div class="learn-en" id="learnEn">•••</div><div class="learn-ipa" id="learnIpa"></div><button class="btn btn-ghost audio-btn" id="speakBtn">🔊 Nghe cách đọc</button><div class="learn-example" id="learnExample"></div><div class="beginner-note">Mẹo: đọc từ tiếng Anh thành tiếng 2–3 lần. Sau đó thử nhớ lại mà không nhìn.</div></div>
+        <div class="btn-row"><button class="btn btn-primary" id="revealBtn" style="width:100%;">👀 Hiện từ tiếng Anh</button></div>
+        <div class="learn-actions" id="learnActions" style="display:none;"><button class="btn btn-again" id="againBtn">↻ Chưa nhớ</button><button class="btn btn-easy" id="easyBtn">✓ Đã nhớ</button></div>
+      </div>
+      <div id="beginnerDone" class="session-done" style="display:none;"><div class="big" id="beginnerDoneMsg"></div><p class="section-hint">Tốt lắm! Hôm nay chỉ cần vậy. Ngày mai quay lại học tiếp.</p><button class="btn btn-primary" id="beginnerRestart">Học lại 10 từ</button></div>
+    </section>
+
     <!-- ROADMAP TAB -->
     <section id="tab-roadmap" class="active">
       <h2>Lộ trình học của bạn</h2>
@@ -326,7 +352,7 @@
 
 <script>
 (function(){
-  const STORAGE_KEY = 'vocab:words';
+  const STORAGE_KEY = 'vocab:words:v2';
   let words = [];
 
   // ---------- Curriculum ----------
@@ -359,15 +385,2999 @@
   const weekById = id => WEEKS.find(w=>w.id===id);
 
   const DEFAULT_WORDS = [
-    {en:"nationality", ipa:"/ˌnæʃəˈnæləti/", vi:"quốc tịch", example:"What is your nationality?", weekId:"w1"},
-    {en:"occupation", ipa:"/ˌɒkjuˈpeɪʃn/", vi:"nghề nghiệp", example:"Please state your occupation.", weekId:"w1"},
-    {en:"sibling", ipa:"/ˈsɪblɪŋ/", vi:"anh/chị/em ruột", example:"I have two siblings.", weekId:"w2"},
-    {en:"outgoing", ipa:"/ˈaʊtɡoʊɪŋ/", vi:"hướng ngoại, cởi mở", example:"She has an outgoing personality.", weekId:"w2"},
-    {en:"leisure", ipa:"/ˈliːʒər/", vi:"thời gian rảnh, giải trí", example:"What do you do in your leisure time?", weekId:"w3"},
-    {en:"routine", ipa:"/ruːˈtiːn/", vi:"thói quen, lịch trình hằng ngày", example:"My morning routine starts at 6 am.", weekId:"w4"},
-    {en:"grocery", ipa:"/ˈɡroʊsəri/", vi:"hàng tạp hoá", example:"I need to buy some groceries.", weekId:"w5"},
-    {en:"forecast", ipa:"/ˈfɔːrkæst/", vi:"dự báo (thời tiết)", example:"The forecast says it will rain today.", weekId:"w6"},
-  ];
+  {
+    "en": "nationality",
+    "ipa": "/ˌnæʃəˈnæləti/",
+    "vi": "quốc tịch",
+    "example": "What is your nationality?",
+    "weekId": "w1",
+    "id": "mtg8axhl3d4kv",
+    "level": 0
+  },
+  {
+    "en": "occupation",
+    "ipa": "/ˌɒkjuˈpeɪʃn/",
+    "vi": "nghề nghiệp",
+    "example": "Please state your occupation.",
+    "weekId": "w1",
+    "id": "mtg8axhlfaxce",
+    "level": 0
+  },
+  {
+    "en": "sibling",
+    "ipa": "/ˈsɪblɪŋ/",
+    "vi": "anh/chị/em ruột",
+    "example": "I have two siblings.",
+    "weekId": "w2",
+    "id": "mtg8axhlxbwez",
+    "level": 0
+  },
+  {
+    "en": "outgoing",
+    "ipa": "/ˈaʊtɡoʊɪŋ/",
+    "vi": "hướng ngoại, cởi mở",
+    "example": "She has an outgoing personality.",
+    "weekId": "w2",
+    "id": "mtg8axhl00eg5",
+    "level": 0
+  },
+  {
+    "en": "leisure",
+    "ipa": "/ˈliːʒər/",
+    "vi": "thời gian rảnh, giải trí",
+    "example": "What do you do in your leisure time?",
+    "weekId": "w3",
+    "id": "mtg8axhlrxv32",
+    "level": 0
+  },
+  {
+    "en": "routine",
+    "ipa": "/ruːˈtiːn/",
+    "vi": "thói quen, lịch trình hằng ngày",
+    "example": "My morning routine starts at 6 am.",
+    "weekId": "w4",
+    "id": "mtg8axhle7r1u",
+    "level": 0
+  },
+  {
+    "en": "grocery",
+    "ipa": "/ˈɡroʊsəri/",
+    "vi": "hàng tạp hoá",
+    "example": "I need to buy some groceries.",
+    "weekId": "w5",
+    "id": "mtg8axhl04txv",
+    "level": 0
+  },
+  {
+    "en": "forecast",
+    "ipa": "/ˈfɔːrkæst/",
+    "vi": "dự báo (thời tiết)",
+    "example": "The forecast says it will rain today.",
+    "weekId": "w6",
+    "id": "mtg8axhlmwhc7",
+    "level": 0
+  },
+  {
+    "id": "mtg8c69rll0wm",
+    "en": "manager",
+    "ipa": "",
+    "vi": "quản lý",
+    "example": "I am a restaurant manager",
+    "weekId": "w1",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "name",
+    "ipa": "/neɪm/",
+    "vi": "tên",
+    "example": "My name is Lan.",
+    "weekId": "w1",
+    "id": "w1_name",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "age",
+    "ipa": "/eɪdʒ/",
+    "vi": "tuổi",
+    "example": "I am 20 years old.",
+    "weekId": "w1",
+    "id": "w1_age",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "student",
+    "ipa": "/ˈstjuːdənt/",
+    "vi": "sinh viên",
+    "example": "I am a university student.",
+    "weekId": "w1",
+    "id": "w1_student",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "address",
+    "ipa": "/əˈdres/",
+    "vi": "địa chỉ",
+    "example": "What is your address?",
+    "weekId": "w1",
+    "id": "w1_address",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "hometown",
+    "ipa": "/ˈhoʊmtaʊn/",
+    "vi": "quê hương, quê quán",
+    "example": "My hometown is Hanoi.",
+    "weekId": "w1",
+    "id": "w1_hometown",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "married",
+    "ipa": "/ˈmærid/",
+    "vi": "đã kết hôn",
+    "example": "She is married.",
+    "weekId": "w1",
+    "id": "w1_married",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "single",
+    "ipa": "/ˈsɪŋɡəl/",
+    "vi": "độc thân",
+    "example": "He is single.",
+    "weekId": "w1",
+    "id": "w1_single",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "family",
+    "ipa": "/ˈfæməli/",
+    "vi": "gia đình",
+    "example": "I have a small family.",
+    "weekId": "w2",
+    "id": "w2_family",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "parent",
+    "ipa": "/ˈperənt/",
+    "vi": "bố hoặc mẹ",
+    "example": "My parents live in Hanoi.",
+    "weekId": "w2",
+    "id": "w2_parent",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "brother",
+    "ipa": "/ˈbrʌðər/",
+    "vi": "anh/em trai",
+    "example": "My brother is a student.",
+    "weekId": "w2",
+    "id": "w2_brother",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "sister",
+    "ipa": "/ˈsɪstər/",
+    "vi": "chị/em gái",
+    "example": "My sister is very friendly.",
+    "weekId": "w2",
+    "id": "w2_sister",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "friend",
+    "ipa": "/frend/",
+    "vi": "bạn",
+    "example": "She is my best friend.",
+    "weekId": "w2",
+    "id": "w2_friend",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "friendly",
+    "ipa": "/ˈfrendli/",
+    "vi": "thân thiện",
+    "example": "He is very friendly.",
+    "weekId": "w2",
+    "id": "w2_friendly",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "quiet",
+    "ipa": "/ˈkwaɪət/",
+    "vi": "ít nói, trầm tính",
+    "example": "My friend is quiet and kind.",
+    "weekId": "w2",
+    "id": "w2_quiet",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "kind",
+    "ipa": "/kaɪnd/",
+    "vi": "tốt bụng",
+    "example": "My mother is very kind.",
+    "weekId": "w2",
+    "id": "w2_kind",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "hobby",
+    "ipa": "/ˈhɒbi/",
+    "vi": "sở thích",
+    "example": "My favorite hobby is reading.",
+    "weekId": "w3",
+    "id": "w3_hobby",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "reading",
+    "ipa": "/ˈriːdɪŋ/",
+    "vi": "đọc sách",
+    "example": "I enjoy reading in my free time.",
+    "weekId": "w3",
+    "id": "w3_reading",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "music",
+    "ipa": "/ˈmjuːzɪk/",
+    "vi": "âm nhạc",
+    "example": "I listen to music every day.",
+    "weekId": "w3",
+    "id": "w3_music",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "football",
+    "ipa": "/ˈfʊtbɔːl/",
+    "vi": "bóng đá",
+    "example": "I play football with my friends.",
+    "weekId": "w3",
+    "id": "w3_football",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "swimming",
+    "ipa": "/ˈswɪmɪŋ/",
+    "vi": "bơi lội",
+    "example": "Swimming is good exercise.",
+    "weekId": "w3",
+    "id": "w3_swimming",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "cycling",
+    "ipa": "/ˈsaɪklɪŋ/",
+    "vi": "đạp xe",
+    "example": "I go cycling on weekends.",
+    "weekId": "w3",
+    "id": "w3_cycling",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "exercise",
+    "ipa": "/ˈeksərsaɪz/",
+    "vi": "tập thể dục",
+    "example": "I exercise every morning.",
+    "weekId": "w3",
+    "id": "w3_exercise",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "game",
+    "ipa": "/ɡeɪm/",
+    "vi": "trò chơi",
+    "example": "We play games together.",
+    "weekId": "w3",
+    "id": "w3_game",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "photography",
+    "ipa": "/fəˈtɒɡrəfi/",
+    "vi": "nhiếp ảnh",
+    "example": "Photography is my hobby.",
+    "weekId": "w3",
+    "id": "w3_photography",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "wake up",
+    "ipa": "/weɪk ʌp/",
+    "vi": "thức dậy",
+    "example": "I wake up at 6 o'clock.",
+    "weekId": "w4",
+    "id": "w4_wake_up",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "get up",
+    "ipa": "/ɡet ʌp/",
+    "vi": "ra khỏi giường, thức dậy",
+    "example": "I get up early every day.",
+    "weekId": "w4",
+    "id": "w4_get_up",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "brush",
+    "ipa": "/brʌʃ/",
+    "vi": "chải, đánh",
+    "example": "I brush my teeth after breakfast.",
+    "weekId": "w4",
+    "id": "w4_brush",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "breakfast",
+    "ipa": "/ˈbrekfəst/",
+    "vi": "bữa sáng",
+    "example": "I have breakfast at 7 am.",
+    "weekId": "w4",
+    "id": "w4_breakfast",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "commute",
+    "ipa": "/kəˈmjuːt/",
+    "vi": "đi lại giữa nhà và nơi làm việc/học",
+    "example": "I commute to work by bus.",
+    "weekId": "w4",
+    "id": "w4_commute",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "work",
+    "ipa": "/wɜːrk/",
+    "vi": "làm việc",
+    "example": "I work from 8 to 5.",
+    "weekId": "w4",
+    "id": "w4_work",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "study",
+    "ipa": "/ˈstʌdi/",
+    "vi": "học",
+    "example": "I study English in the evening.",
+    "weekId": "w4",
+    "id": "w4_study",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "dinner",
+    "ipa": "/ˈdɪnər/",
+    "vi": "bữa tối",
+    "example": "We have dinner at 7 pm.",
+    "weekId": "w4",
+    "id": "w4_dinner",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "bedtime",
+    "ipa": "/ˈbedtaɪm/",
+    "vi": "giờ đi ngủ",
+    "example": "My bedtime is usually 11 pm.",
+    "weekId": "w4",
+    "id": "w4_bedtime",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "food",
+    "ipa": "/fuːd/",
+    "vi": "thức ăn",
+    "example": "I love Vietnamese food.",
+    "weekId": "w5",
+    "id": "w5_food",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "drink",
+    "ipa": "/drɪŋk/",
+    "vi": "đồ uống; uống",
+    "example": "What would you like to drink?",
+    "weekId": "w5",
+    "id": "w5_drink",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "meal",
+    "ipa": "/miːl/",
+    "vi": "bữa ăn",
+    "example": "Breakfast is my favorite meal.",
+    "weekId": "w5",
+    "id": "w5_meal",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "rice",
+    "ipa": "/raɪs/",
+    "vi": "cơm, gạo",
+    "example": "I eat rice every day.",
+    "weekId": "w5",
+    "id": "w5_rice",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "vegetable",
+    "ipa": "/ˈvedʒtəbl/",
+    "vi": "rau, củ",
+    "example": "You should eat more vegetables.",
+    "weekId": "w5",
+    "id": "w5_vegetable",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "fruit",
+    "ipa": "/fruːt/",
+    "vi": "trái cây",
+    "example": "I eat fruit for breakfast.",
+    "weekId": "w5",
+    "id": "w5_fruit",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "water",
+    "ipa": "/ˈwɔːtər/",
+    "vi": "nước",
+    "example": "I drink a lot of water.",
+    "weekId": "w5",
+    "id": "w5_water",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "coffee",
+    "ipa": "/ˈkɒfi/",
+    "vi": "cà phê",
+    "example": "I drink coffee in the morning.",
+    "weekId": "w5",
+    "id": "w5_coffee",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "delicious",
+    "ipa": "/dɪˈlɪʃəs/",
+    "vi": "ngon",
+    "example": "This meal is delicious.",
+    "weekId": "w5",
+    "id": "w5_delicious",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "weather",
+    "ipa": "/ˈweðər/",
+    "vi": "thời tiết",
+    "example": "How is the weather today?",
+    "weekId": "w6",
+    "id": "w6_weather",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "sunny",
+    "ipa": "/ˈsʌni/",
+    "vi": "có nắng",
+    "example": "It is sunny today.",
+    "weekId": "w6",
+    "id": "w6_sunny",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "rainy",
+    "ipa": "/ˈreɪni/",
+    "vi": "có mưa",
+    "example": "It is rainy in July.",
+    "weekId": "w6",
+    "id": "w6_rainy",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "cloudy",
+    "ipa": "/ˈklaʊdi/",
+    "vi": "nhiều mây",
+    "example": "The sky is cloudy today.",
+    "weekId": "w6",
+    "id": "w6_cloudy",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "windy",
+    "ipa": "/ˈwɪndi/",
+    "vi": "nhiều gió",
+    "example": "It is very windy outside.",
+    "weekId": "w6",
+    "id": "w6_windy",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "hot",
+    "ipa": "/hɒt/",
+    "vi": "nóng",
+    "example": "It is very hot today.",
+    "weekId": "w6",
+    "id": "w6_hot",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "cold",
+    "ipa": "/koʊld/",
+    "vi": "lạnh",
+    "example": "Winter is cold here.",
+    "weekId": "w6",
+    "id": "w6_cold",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "summer",
+    "ipa": "/ˈsʌmər/",
+    "vi": "mùa hè",
+    "example": "I love summer.",
+    "weekId": "w6",
+    "id": "w6_summer",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "winter",
+    "ipa": "/ˈwɪntər/",
+    "vi": "mùa đông",
+    "example": "Winter starts in December.",
+    "weekId": "w6",
+    "id": "w6_winter",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "accommodation",
+    "ipa": "/əˌkɒməˈdeɪʃn/",
+    "vi": "chỗ ở, nơi lưu trú",
+    "example": "We need accommodation for two nights.",
+    "weekId": "w7",
+    "id": "w7_accommodation",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "home",
+    "ipa": "/hoʊm/",
+    "vi": "nhà, mái ấm",
+    "example": "I like staying at home.",
+    "weekId": "w7",
+    "id": "w7_home",
+    "cat": "Accommodation & Home",
+    "level": 1
+  },
+  {
+    "en": "house",
+    "ipa": "/haʊs/",
+    "vi": "ngôi nhà",
+    "example": "My house has three bedrooms.",
+    "weekId": "w7",
+    "id": "w7_house",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "apartment",
+    "ipa": "/əˈpɑːrtmənt/",
+    "vi": "căn hộ",
+    "example": "I live in an apartment.",
+    "weekId": "w7",
+    "id": "w7_apartment",
+    "cat": "Accommodation & Home",
+    "level": 1
+  },
+  {
+    "en": "bedroom",
+    "ipa": "/ˈbedruːm/",
+    "vi": "phòng ngủ",
+    "example": "My bedroom is upstairs.",
+    "weekId": "w7",
+    "id": "w7_bedroom",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "kitchen",
+    "ipa": "/ˈkɪtʃɪn/",
+    "vi": "nhà bếp",
+    "example": "The kitchen is very small.",
+    "weekId": "w7",
+    "id": "w7_kitchen",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "bathroom",
+    "ipa": "/ˈbæθruːm/",
+    "vi": "phòng tắm",
+    "example": "The bathroom is next to my bedroom.",
+    "weekId": "w7",
+    "id": "w7_bathroom",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "living room",
+    "ipa": "/ˈlɪvɪŋ ruːm/",
+    "vi": "phòng khách",
+    "example": "We watch TV in the living room.",
+    "weekId": "w7",
+    "id": "w7_living_room",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "furniture",
+    "ipa": "/ˈfɜːrnɪtʃər/",
+    "vi": "đồ nội thất",
+    "example": "The room has modern furniture.",
+    "weekId": "w7",
+    "id": "w7_furniture",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "rent",
+    "ipa": "/rent/",
+    "vi": "tiền thuê; thuê",
+    "example": "I pay rent every month.",
+    "weekId": "w7",
+    "id": "w7_rent",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "health",
+    "ipa": "/helθ/",
+    "vi": "sức khỏe",
+    "example": "Good health is important.",
+    "weekId": "w8",
+    "id": "w8_health",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "body",
+    "ipa": "/ˈbɒdi/",
+    "vi": "cơ thể",
+    "example": "Exercise is good for your body.",
+    "weekId": "w8",
+    "id": "w8_body",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "head",
+    "ipa": "/hed/",
+    "vi": "đầu",
+    "example": "My head hurts.",
+    "weekId": "w8",
+    "id": "w8_head",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "eye",
+    "ipa": "/aɪ/",
+    "vi": "mắt",
+    "example": "My eyes are tired.",
+    "weekId": "w8",
+    "id": "w8_eye",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "ear",
+    "ipa": "/ɪr/",
+    "vi": "tai",
+    "example": "My left ear hurts.",
+    "weekId": "w8",
+    "id": "w8_ear",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "stomach",
+    "ipa": "/ˈstʌmək/",
+    "vi": "dạ dày, bụng",
+    "example": "I have a stomach ache.",
+    "weekId": "w8",
+    "id": "w8_stomach",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "headache",
+    "ipa": "/ˈhedeɪk/",
+    "vi": "đau đầu",
+    "example": "I have a headache.",
+    "weekId": "w8",
+    "id": "w8_headache",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "fever",
+    "ipa": "/ˈfiːvər/",
+    "vi": "sốt",
+    "example": "He has a high fever.",
+    "weekId": "w8",
+    "id": "w8_fever",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "cough",
+    "ipa": "/kɒf/",
+    "vi": "ho",
+    "example": "I have a bad cough.",
+    "weekId": "w8",
+    "id": "w8_cough",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "healthy",
+    "ipa": "/ˈhelθi/",
+    "vi": "khỏe mạnh",
+    "example": "I try to stay healthy.",
+    "weekId": "w8",
+    "id": "w8_healthy",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "experience",
+    "ipa": "/ɪkˈspɪəriəns/",
+    "vi": "kinh nghiệm; trải nghiệm",
+    "example": "She has five years of work experience.",
+    "weekId": "w1",
+    "id": "w1_experience",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "education",
+    "ipa": "/ˌedʒuˈkeɪʃn/",
+    "vi": "giáo dục",
+    "example": "Education plays an important role in our lives.",
+    "weekId": "w1",
+    "id": "w1_education",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "relationship",
+    "ipa": "/rɪˈleɪʃnʃɪp/",
+    "vi": "mối quan hệ",
+    "example": "Good communication is important in a relationship.",
+    "weekId": "w2",
+    "id": "w2_relationship",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "personality",
+    "ipa": "/ˌpɜːrsəˈnæləti/",
+    "vi": "tính cách",
+    "example": "Her personality is friendly and outgoing.",
+    "weekId": "w2",
+    "id": "w2_personality",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "interest",
+    "ipa": "/ˈɪntrəst/",
+    "vi": "sở thích; mối quan tâm",
+    "example": "My main interest is learning English.",
+    "weekId": "w3",
+    "id": "w3_interest",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "activity",
+    "ipa": "/ækˈtɪvəti/",
+    "vi": "hoạt động",
+    "example": "Outdoor activities are good for your health.",
+    "weekId": "w3",
+    "id": "w3_activity",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "regularly",
+    "ipa": "/ˈreɡjələrli/",
+    "vi": "thường xuyên",
+    "example": "I exercise regularly to stay fit.",
+    "weekId": "w4",
+    "id": "w4_regularly",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "schedule",
+    "ipa": "/ˈskedʒuːl/",
+    "vi": "lịch trình",
+    "example": "I have a busy schedule this week.",
+    "weekId": "w4",
+    "id": "w4_schedule",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "nutrition",
+    "ipa": "/nuˈtrɪʃn/",
+    "vi": "dinh dưỡng",
+    "example": "Good nutrition is essential for a healthy life.",
+    "weekId": "w5",
+    "id": "w5_nutrition",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "diet",
+    "ipa": "/ˈdaɪət/",
+    "vi": "chế độ ăn uống",
+    "example": "A balanced diet can improve your health.",
+    "weekId": "w5",
+    "id": "w5_diet",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "climate",
+    "ipa": "/ˈklaɪmət/",
+    "vi": "khí hậu",
+    "example": "The climate is becoming warmer.",
+    "weekId": "w6",
+    "id": "w6_climate",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "temperature",
+    "ipa": "/ˈtemprətʃər/",
+    "vi": "nhiệt độ",
+    "example": "The temperature is expected to rise tomorrow.",
+    "weekId": "w6",
+    "id": "w6_temperature",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "neighborhood",
+    "ipa": "/ˈneɪbərhʊd/",
+    "vi": "khu dân cư, khu phố",
+    "example": "I live in a quiet neighborhood.",
+    "weekId": "w7",
+    "id": "w7_neighborhood",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "convenient",
+    "ipa": "/kənˈviːniənt/",
+    "vi": "thuận tiện",
+    "example": "The apartment is in a convenient location.",
+    "weekId": "w7",
+    "id": "w7_convenient",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "symptom",
+    "ipa": "/ˈsɪmptəm/",
+    "vi": "triệu chứng",
+    "example": "A sore throat is a common symptom of a cold.",
+    "weekId": "w8",
+    "id": "w8_symptom",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "treatment",
+    "ipa": "/ˈtriːtmənt/",
+    "vi": "điều trị",
+    "example": "The doctor recommended a simple treatment.",
+    "weekId": "w8",
+    "id": "w8_treatment",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "benefit",
+    "ipa": "/ˈbenɪfɪt/",
+    "vi": "lợi ích",
+    "example": "Regular exercise has many health benefits.",
+    "weekId": "w8",
+    "id": "w8_benefit",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "improve",
+    "ipa": "/ɪmˈpruːv/",
+    "vi": "cải thiện",
+    "example": "Reading can improve your English skills.",
+    "weekId": "w3",
+    "id": "w3_improve",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "prefer",
+    "ipa": "/prɪˈfɜːr/",
+    "vi": "thích hơn",
+    "example": "I prefer playing sports to watching TV.",
+    "weekId": "w3",
+    "id": "w3_prefer",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "comfortable",
+    "ipa": "/ˈkʌmftəbl/",
+    "vi": "thoải mái",
+    "example": "I feel comfortable in my new home.",
+    "weekId": "w7",
+    "id": "w7_comfortable",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "qualification",
+    "ipa": "/ˌkwɒlɪfɪˈkeɪʃn/",
+    "vi": "bằng cấp; trình độ chuyên môn",
+    "example": "This job requires a professional qualification.",
+    "weekId": "w1",
+    "id": "w1_qualification",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "skill",
+    "ipa": "/skɪl/",
+    "vi": "kỹ năng",
+    "example": "Communication is an important skill.",
+    "weekId": "w1",
+    "id": "w1_skill",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "career",
+    "ipa": "/kəˈrɪər/",
+    "vi": "sự nghiệp",
+    "example": "He wants to build a successful career.",
+    "weekId": "w1",
+    "id": "w1_career",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "profession",
+    "ipa": "/prəˈfeʃn/",
+    "vi": "nghề nghiệp",
+    "example": "Teaching is a rewarding profession.",
+    "weekId": "w1",
+    "id": "w1_profession",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "employee",
+    "ipa": "/ɪmˈplɔɪiː/",
+    "vi": "nhân viên",
+    "example": "The company has over 200 employees.",
+    "weekId": "w1",
+    "id": "w1_employee",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "employer",
+    "ipa": "/ɪmˈplɔɪər/",
+    "vi": "người sử dụng lao động",
+    "example": "The employer offers good working conditions.",
+    "weekId": "w1",
+    "id": "w1_employer",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "full-time",
+    "ipa": "/ˌfʊl ˈtaɪm/",
+    "vi": "toàn thời gian",
+    "example": "She has a full-time job.",
+    "weekId": "w1",
+    "id": "w1_full_time",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "part-time",
+    "ipa": "/ˌpɑːrt ˈtaɪm/",
+    "vi": "bán thời gian",
+    "example": "He works part-time at a café.",
+    "weekId": "w1",
+    "id": "w1_part_time",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "responsible",
+    "ipa": "/rɪˈspɒnsəbl/",
+    "vi": "có trách nhiệm",
+    "example": "I am responsible for customer service.",
+    "weekId": "w1",
+    "id": "w1_responsible",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "ambitious",
+    "ipa": "/æmˈbɪʃəs/",
+    "vi": "có tham vọng",
+    "example": "She is ambitious and works hard.",
+    "weekId": "w1",
+    "id": "w1_ambitious",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "confident",
+    "ipa": "/ˈkɒnfɪdənt/",
+    "vi": "tự tin",
+    "example": "He is confident when speaking English.",
+    "weekId": "w1",
+    "id": "w1_confident",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "independent",
+    "ipa": "/ˌɪndɪˈpendənt/",
+    "vi": "độc lập",
+    "example": "University life helps students become independent.",
+    "weekId": "w1",
+    "id": "w1_independent",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "citizen",
+    "ipa": "/ˈsɪtɪzn/",
+    "vi": "công dân",
+    "example": "Every citizen has certain rights.",
+    "weekId": "w1",
+    "id": "w1_citizen",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "identity",
+    "ipa": "/aɪˈdentəti/",
+    "vi": "danh tính; bản sắc",
+    "example": "A passport is used to prove your identity.",
+    "weekId": "w1",
+    "id": "w1_identity",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "background",
+    "ipa": "/ˈbækɡraʊnd/",
+    "vi": "hoàn cảnh; nền tảng",
+    "example": "She comes from a medical background.",
+    "weekId": "w1",
+    "id": "w1_background",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "personal",
+    "ipa": "/ˈpɜːrsənl/",
+    "vi": "cá nhân",
+    "example": "Please provide your personal information.",
+    "weekId": "w1",
+    "id": "w1_personal",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "introduce",
+    "ipa": "/ˌɪntrəˈdjuːs/",
+    "vi": "giới thiệu",
+    "example": "Let me introduce myself.",
+    "weekId": "w1",
+    "id": "w1_introduce",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "application",
+    "ipa": "/ˌæplɪˈkeɪʃn/",
+    "vi": "đơn đăng ký; đơn xin việc",
+    "example": "I submitted my job application yesterday.",
+    "weekId": "w1",
+    "id": "w1_application",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "position",
+    "ipa": "/pəˈzɪʃn/",
+    "vi": "vị trí công việc",
+    "example": "She applied for a management position.",
+    "weekId": "w1",
+    "id": "w1_position",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "salary",
+    "ipa": "/ˈsæləri/",
+    "vi": "lương",
+    "example": "The company offers a competitive salary.",
+    "weekId": "w1",
+    "id": "w1_salary",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "goal",
+    "ipa": "/ɡoʊl/",
+    "vi": "mục tiêu",
+    "example": "My goal is to improve my English.",
+    "weekId": "w1",
+    "id": "w1_goal",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "achievement",
+    "ipa": "/əˈtʃiːvmənt/",
+    "vi": "thành tựu",
+    "example": "Graduating from university was a great achievement.",
+    "weekId": "w1",
+    "id": "w1_achievement",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "strength",
+    "ipa": "/streŋθ/",
+    "vi": "điểm mạnh",
+    "example": "Communication is one of my strengths.",
+    "weekId": "w1",
+    "id": "w1_strength",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "relative",
+    "ipa": "/ˈrelətɪv/",
+    "vi": "họ hàng",
+    "example": "We often visit our relatives at weekends.",
+    "weekId": "w2",
+    "id": "w2_relative",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "generation",
+    "ipa": "/ˌdʒenəˈreɪʃn/",
+    "vi": "thế hệ",
+    "example": "Different generations may have different opinions.",
+    "weekId": "w2",
+    "id": "w2_generation",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "adult",
+    "ipa": "/ˈædʌlt/",
+    "vi": "người trưởng thành",
+    "example": "Adults should set a good example for children.",
+    "weekId": "w2",
+    "id": "w2_adult",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "teenager",
+    "ipa": "/ˈtiːneɪdʒər/",
+    "vi": "thiếu niên",
+    "example": "Many teenagers spend a lot of time online.",
+    "weekId": "w2",
+    "id": "w2_teenager",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "childhood",
+    "ipa": "/ˈtʃaɪldhʊd/",
+    "vi": "tuổi thơ",
+    "example": "I have many happy memories of my childhood.",
+    "weekId": "w2",
+    "id": "w2_childhood",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "support",
+    "ipa": "/səˈpɔːrt/",
+    "vi": "ủng hộ; hỗ trợ",
+    "example": "Family support is important during difficult times.",
+    "weekId": "w2",
+    "id": "w2_support",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "respect",
+    "ipa": "/rɪˈspekt/",
+    "vi": "tôn trọng",
+    "example": "Children should respect their parents.",
+    "weekId": "w2",
+    "id": "w2_respect",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "trust",
+    "ipa": "/trʌst/",
+    "vi": "tin tưởng; niềm tin",
+    "example": "Trust is essential in a friendship.",
+    "weekId": "w2",
+    "id": "w2_trust",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "honest",
+    "ipa": "/ˈɒnɪst/",
+    "vi": "trung thực",
+    "example": "A good friend should be honest.",
+    "weekId": "w2",
+    "id": "w2_honest",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "generous",
+    "ipa": "/ˈdʒenərəs/",
+    "vi": "hào phóng",
+    "example": "My uncle is very generous.",
+    "weekId": "w2",
+    "id": "w2_generous",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "patient",
+    "ipa": "/ˈpeɪʃnt/",
+    "vi": "kiên nhẫn",
+    "example": "Good parents need to be patient.",
+    "weekId": "w2",
+    "id": "w2_patient",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "polite",
+    "ipa": "/pəˈlaɪt/",
+    "vi": "lịch sự",
+    "example": "It is important to be polite to others.",
+    "weekId": "w2",
+    "id": "w2_polite",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "sociable",
+    "ipa": "/ˈsoʊʃəbl/",
+    "vi": "hòa đồng",
+    "example": "She is sociable and enjoys meeting new people.",
+    "weekId": "w2",
+    "id": "w2_sociable",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "reliable",
+    "ipa": "/rɪˈlaɪəbl/",
+    "vi": "đáng tin cậy",
+    "example": "He is a reliable friend.",
+    "weekId": "w2",
+    "id": "w2_reliable",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "similar",
+    "ipa": "/ˈsɪmələr/",
+    "vi": "tương tự",
+    "example": "My brother and I have similar interests.",
+    "weekId": "w2",
+    "id": "w2_similar",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "different",
+    "ipa": "/ˈdɪfrənt/",
+    "vi": "khác nhau",
+    "example": "People from different backgrounds can become friends.",
+    "weekId": "w2",
+    "id": "w2_different",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "argument",
+    "ipa": "/ˈɑːrɡjumənt/",
+    "vi": "cuộc tranh cãi",
+    "example": "They had an argument about money.",
+    "weekId": "w2",
+    "id": "w2_argument",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "solve",
+    "ipa": "/sɒlv/",
+    "vi": "giải quyết",
+    "example": "We should solve our problems calmly.",
+    "weekId": "w2",
+    "id": "w2_solve",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "communicate",
+    "ipa": "/kəˈmjuːnɪkeɪt/",
+    "vi": "giao tiếp",
+    "example": "Families need to communicate openly.",
+    "weekId": "w2",
+    "id": "w2_communicate",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "neighbour",
+    "ipa": "/ˈneɪbər/",
+    "vi": "hàng xóm",
+    "example": "Our neighbours are very friendly.",
+    "weekId": "w2",
+    "id": "w2_neighbour",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "community",
+    "ipa": "/kəˈmjuːnəti/",
+    "vi": "cộng đồng",
+    "example": "Everyone should contribute to the community.",
+    "weekId": "w2",
+    "id": "w2_community",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "influence",
+    "ipa": "/ˈɪnfluəns/",
+    "vi": "ảnh hưởng",
+    "example": "Friends can influence our decisions.",
+    "weekId": "w2",
+    "id": "w2_influence",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "role model",
+    "ipa": "/ˈroʊl ˌmɒdl/",
+    "vi": "hình mẫu",
+    "example": "Parents are important role models for children.",
+    "weekId": "w2",
+    "id": "w2_role_model",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "lonely",
+    "ipa": "/ˈloʊnli/",
+    "vi": "cô đơn",
+    "example": "Some elderly people feel lonely.",
+    "weekId": "w2",
+    "id": "w2_lonely",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "entertainment",
+    "ipa": "/ˌentərˈteɪnmənt/",
+    "vi": "giải trí",
+    "example": "Television is a popular form of entertainment.",
+    "weekId": "w3",
+    "id": "w3_entertainment",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "relax",
+    "ipa": "/rɪˈlæks/",
+    "vi": "thư giãn",
+    "example": "I listen to music to relax.",
+    "weekId": "w3",
+    "id": "w3_relax",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "creative",
+    "ipa": "/kriˈeɪtɪv/",
+    "vi": "sáng tạo",
+    "example": "Painting is a creative activity.",
+    "weekId": "w3",
+    "id": "w3_creative",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "competition",
+    "ipa": "/ˌkɒmpəˈtɪʃn/",
+    "vi": "cuộc thi; sự cạnh tranh",
+    "example": "He won the swimming competition.",
+    "weekId": "w3",
+    "id": "w3_competition",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "teamwork",
+    "ipa": "/ˈtiːmwɜːrk/",
+    "vi": "làm việc nhóm",
+    "example": "Sport teaches children the value of teamwork.",
+    "weekId": "w3",
+    "id": "w3_teamwork",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "player",
+    "ipa": "/ˈpleɪər/",
+    "vi": "cầu thủ; người chơi",
+    "example": "He is a talented football player.",
+    "weekId": "w3",
+    "id": "w3_player",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "coach",
+    "ipa": "/koʊtʃ/",
+    "vi": "huấn luyện viên",
+    "example": "The coach trains the team every day.",
+    "weekId": "w3",
+    "id": "w3_coach",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "training",
+    "ipa": "/ˈtreɪnɪŋ/",
+    "vi": "việc luyện tập",
+    "example": "Regular training improves performance.",
+    "weekId": "w3",
+    "id": "w3_training",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "performance",
+    "ipa": "/pərˈfɔːrməns/",
+    "vi": "màn trình diễn; thành tích",
+    "example": "Her performance was excellent.",
+    "weekId": "w3",
+    "id": "w3_performance",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "skillful",
+    "ipa": "/ˈskɪlfəl/",
+    "vi": "có kỹ năng",
+    "example": "He is a skillful tennis player.",
+    "weekId": "w3",
+    "id": "w3_skillful",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "physical",
+    "ipa": "/ˈfɪzɪkl/",
+    "vi": "thuộc thể chất",
+    "example": "Regular sport improves physical health.",
+    "weekId": "w3",
+    "id": "w3_physical",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "mental",
+    "ipa": "/ˈmentl/",
+    "vi": "thuộc tinh thần",
+    "example": "Hobbies can improve mental well-being.",
+    "weekId": "w3",
+    "id": "w3_mental",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "outdoor",
+    "ipa": "/ˈaʊtdɔːr/",
+    "vi": "ngoài trời",
+    "example": "I enjoy outdoor activities.",
+    "weekId": "w3",
+    "id": "w3_outdoor",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "indoor",
+    "ipa": "/ˈɪndɔːr/",
+    "vi": "trong nhà",
+    "example": "Bad weather forces us to choose indoor activities.",
+    "weekId": "w3",
+    "id": "w3_indoor",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "talent",
+    "ipa": "/ˈtælənt/",
+    "vi": "tài năng",
+    "example": "She has a talent for music.",
+    "weekId": "w3",
+    "id": "w3_talent",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "practice",
+    "ipa": "/ˈpræktɪs/",
+    "vi": "luyện tập; thực hành",
+    "example": "Practice is necessary to improve your skills.",
+    "weekId": "w3",
+    "id": "w3_practice",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "enjoyment",
+    "ipa": "/ɪnˈdʒɔɪmənt/",
+    "vi": "sự thích thú",
+    "example": "Sport provides enjoyment as well as exercise.",
+    "weekId": "w3",
+    "id": "w3_enjoyment",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "active",
+    "ipa": "/ˈæktɪv/",
+    "vi": "năng động",
+    "example": "Young people should stay active.",
+    "weekId": "w3",
+    "id": "w3_active",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "habit",
+    "ipa": "/ˈhæbɪt/",
+    "vi": "thói quen",
+    "example": "Reading is a good habit.",
+    "weekId": "w3",
+    "id": "w3_habit",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "daily",
+    "ipa": "/ˈdeɪli/",
+    "vi": "hằng ngày",
+    "example": "Walking is part of my daily routine.",
+    "weekId": "w4",
+    "id": "w4_daily",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "usually",
+    "ipa": "/ˈjuːʒuəli/",
+    "vi": "thường thường",
+    "example": "I usually get up at six.",
+    "weekId": "w4",
+    "id": "w4_usually",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "occasionally",
+    "ipa": "/əˈkeɪʒənəli/",
+    "vi": "thỉnh thoảng",
+    "example": "I occasionally work at weekends.",
+    "weekId": "w4",
+    "id": "w4_occasionally",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "early",
+    "ipa": "/ˈɜːrli/",
+    "vi": "sớm",
+    "example": "I prefer to wake up early.",
+    "weekId": "w4",
+    "id": "w4_early",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "late",
+    "ipa": "/leɪt/",
+    "vi": "muộn",
+    "example": "I went to bed late last night.",
+    "weekId": "w4",
+    "id": "w4_late",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "productive",
+    "ipa": "/prəˈdʌktɪv/",
+    "vi": "hiệu quả, năng suất",
+    "example": "I feel more productive in the morning.",
+    "weekId": "w4",
+    "id": "w4_productive",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "busy",
+    "ipa": "/ˈbɪzi/",
+    "vi": "bận rộn",
+    "example": "I am busy during the week.",
+    "weekId": "w4",
+    "id": "w4_busy",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "free time",
+    "ipa": "/ˌfriː ˈtaɪm/",
+    "vi": "thời gian rảnh",
+    "example": "I read books in my free time.",
+    "weekId": "w4",
+    "id": "w4_free_time",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "appointment",
+    "ipa": "/əˈpɔɪntmənt/",
+    "vi": "cuộc hẹn",
+    "example": "I have a doctor's appointment at ten.",
+    "weekId": "w4",
+    "id": "w4_appointment",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "deadline",
+    "ipa": "/ˈdedlaɪn/",
+    "vi": "hạn chót",
+    "example": "I must finish the report before the deadline.",
+    "weekId": "w4",
+    "id": "w4_deadline",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "task",
+    "ipa": "/tɑːsk/",
+    "vi": "nhiệm vụ",
+    "example": "I have several tasks to complete today.",
+    "weekId": "w4",
+    "id": "w4_task",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "plan",
+    "ipa": "/plæn/",
+    "vi": "kế hoạch",
+    "example": "I plan my day every morning.",
+    "weekId": "w4",
+    "id": "w4_plan",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "prepare",
+    "ipa": "/prɪˈpeər/",
+    "vi": "chuẩn bị",
+    "example": "I prepare my clothes the night before.",
+    "weekId": "w4",
+    "id": "w4_prepare",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "arrange",
+    "ipa": "/əˈreɪndʒ/",
+    "vi": "sắp xếp",
+    "example": "I arrange my schedule carefully.",
+    "weekId": "w4",
+    "id": "w4_arrange",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "finish",
+    "ipa": "/ˈfɪnɪʃ/",
+    "vi": "hoàn thành",
+    "example": "I finish work at five.",
+    "weekId": "w4",
+    "id": "w4_finish",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "attend",
+    "ipa": "/əˈtend/",
+    "vi": "tham dự",
+    "example": "I attend classes in the morning.",
+    "weekId": "w4",
+    "id": "w4_attend",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "travel",
+    "ipa": "/ˈtrævəl/",
+    "vi": "đi lại; du lịch",
+    "example": "I travel to work by bus.",
+    "weekId": "w4",
+    "id": "w4_travel",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "rest",
+    "ipa": "/rest/",
+    "vi": "nghỉ ngơi",
+    "example": "I need to rest after work.",
+    "weekId": "w4",
+    "id": "w4_rest",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "sleep",
+    "ipa": "/sliːp/",
+    "vi": "ngủ",
+    "example": "Adults usually need enough sleep.",
+    "weekId": "w4",
+    "id": "w4_sleep",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "concentrate",
+    "ipa": "/ˈkɒnsəntreɪt/",
+    "vi": "tập trung",
+    "example": "It is difficult to concentrate when I am tired.",
+    "weekId": "w4",
+    "id": "w4_concentrate",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "organize",
+    "ipa": "/ˈɔːrɡənaɪz/",
+    "vi": "tổ chức, sắp xếp",
+    "example": "I organize my work every morning.",
+    "weekId": "w4",
+    "id": "w4_organize",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "balance",
+    "ipa": "/ˈbæləns/",
+    "vi": "cân bằng",
+    "example": "It is important to balance work and personal life.",
+    "weekId": "w4",
+    "id": "w4_balance",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "ingredient",
+    "ipa": "/ɪnˈɡriːdiənt/",
+    "vi": "nguyên liệu",
+    "example": "Fresh vegetables are important ingredients.",
+    "weekId": "w5",
+    "id": "w5_ingredient",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "balanced",
+    "ipa": "/ˈbælənst/",
+    "vi": "cân bằng",
+    "example": "A balanced diet contains different food groups.",
+    "weekId": "w5",
+    "id": "w5_balanced",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "unhealthy",
+    "ipa": "/ʌnˈhelθi/",
+    "vi": "không lành mạnh",
+    "example": "Eating too much fast food is unhealthy.",
+    "weekId": "w5",
+    "id": "w5_unhealthy",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "vegetarian",
+    "ipa": "/ˌvedʒəˈteriən/",
+    "vi": "người ăn chay; thuộc ăn chay",
+    "example": "My sister is a vegetarian.",
+    "weekId": "w5",
+    "id": "w5_vegetarian",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "protein",
+    "ipa": "/ˈproʊtiːn/",
+    "vi": "chất đạm",
+    "example": "Eggs are a good source of protein.",
+    "weekId": "w5",
+    "id": "w5_protein",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "vitamin",
+    "ipa": "/ˈvaɪtəmɪn/",
+    "vi": "vitamin",
+    "example": "Fruit contains many vitamins.",
+    "weekId": "w5",
+    "id": "w5_vitamin",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "calorie",
+    "ipa": "/ˈkæləri/",
+    "vi": "calo",
+    "example": "This snack contains many calories.",
+    "weekId": "w5",
+    "id": "w5_calorie",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "consume",
+    "ipa": "/kənˈsuːm/",
+    "vi": "tiêu thụ",
+    "example": "People should consume less sugar.",
+    "weekId": "w5",
+    "id": "w5_consume",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "portion",
+    "ipa": "/ˈpɔːrʃn/",
+    "vi": "khẩu phần",
+    "example": "The restaurant serves large portions.",
+    "weekId": "w5",
+    "id": "w5_portion",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "taste",
+    "ipa": "/teɪst/",
+    "vi": "hương vị; nếm",
+    "example": "I like the taste of this soup.",
+    "weekId": "w5",
+    "id": "w5_taste",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "flavor",
+    "ipa": "/ˈfleɪvər/",
+    "vi": "hương vị",
+    "example": "The dish has a strong flavor.",
+    "weekId": "w5",
+    "id": "w5_flavor",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "spicy",
+    "ipa": "/ˈspaɪsi/",
+    "vi": "cay",
+    "example": "I don't like very spicy food.",
+    "weekId": "w5",
+    "id": "w5_spicy",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "sweet",
+    "ipa": "/swiːt/",
+    "vi": "ngọt",
+    "example": "This fruit is very sweet.",
+    "weekId": "w5",
+    "id": "w5_sweet",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "salty",
+    "ipa": "/ˈsɔːlti/",
+    "vi": "mặn",
+    "example": "The soup is too salty.",
+    "weekId": "w5",
+    "id": "w5_salty",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "fresh",
+    "ipa": "/freʃ/",
+    "vi": "tươi",
+    "example": "We buy fresh food every day.",
+    "weekId": "w5",
+    "id": "w5_fresh",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "restaurant",
+    "ipa": "/ˈrestrɒnt/",
+    "vi": "nhà hàng",
+    "example": "We had dinner at a local restaurant.",
+    "weekId": "w5",
+    "id": "w5_restaurant",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "menu",
+    "ipa": "/ˈmenjuː/",
+    "vi": "thực đơn",
+    "example": "Could I see the menu, please?",
+    "weekId": "w5",
+    "id": "w5_menu",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "order",
+    "ipa": "/ˈɔːrdər/",
+    "vi": "gọi món; đơn hàng",
+    "example": "I would like to order a bowl of soup.",
+    "weekId": "w5",
+    "id": "w5_order",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "snack",
+    "ipa": "/snæk/",
+    "vi": "đồ ăn nhẹ",
+    "example": "I usually have fruit as a snack.",
+    "weekId": "w5",
+    "id": "w5_snack",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "beverage",
+    "ipa": "/ˈbevərɪdʒ/",
+    "vi": "đồ uống",
+    "example": "Water is the healthiest beverage.",
+    "weekId": "w5",
+    "id": "w5_beverage",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "sugar",
+    "ipa": "/ˈʃʊɡər/",
+    "vi": "đường",
+    "example": "Too much sugar can be harmful.",
+    "weekId": "w5",
+    "id": "w5_sugar",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "reduce",
+    "ipa": "/rɪˈdjuːs/",
+    "vi": "giảm",
+    "example": "We should reduce our salt intake.",
+    "weekId": "w5",
+    "id": "w5_reduce",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "humidity",
+    "ipa": "/hjuːˈmɪdəti/",
+    "vi": "độ ẩm",
+    "example": "High humidity makes the weather uncomfortable.",
+    "weekId": "w6",
+    "id": "w6_humidity",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "storm",
+    "ipa": "/stɔːrm/",
+    "vi": "bão",
+    "example": "The storm caused serious damage.",
+    "weekId": "w6",
+    "id": "w6_storm",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "thunderstorm",
+    "ipa": "/ˈθʌndərstɔːrm/",
+    "vi": "giông bão",
+    "example": "A thunderstorm is expected tonight.",
+    "weekId": "w6",
+    "id": "w6_thunderstorm",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "flood",
+    "ipa": "/flʌd/",
+    "vi": "lũ lụt",
+    "example": "Heavy rain can cause floods.",
+    "weekId": "w6",
+    "id": "w6_flood",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "drought",
+    "ipa": "/draʊt/",
+    "vi": "hạn hán",
+    "example": "The region suffered from a long drought.",
+    "weekId": "w6",
+    "id": "w6_drought",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "rainfall",
+    "ipa": "/ˈreɪnfɔːl/",
+    "vi": "lượng mưa",
+    "example": "Annual rainfall has decreased.",
+    "weekId": "w6",
+    "id": "w6_rainfall",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "heatwave",
+    "ipa": "/ˈhiːtweɪv/",
+    "vi": "đợt nắng nóng",
+    "example": "The city experienced a severe heatwave.",
+    "weekId": "w6",
+    "id": "w6_heatwave",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "sunshine",
+    "ipa": "/ˈsʌnʃaɪn/",
+    "vi": "ánh nắng",
+    "example": "Plants need sunlight to grow.",
+    "weekId": "w6",
+    "id": "w6_sunshine",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "season",
+    "ipa": "/ˈsiːzn/",
+    "vi": "mùa",
+    "example": "Spring is my favorite season.",
+    "weekId": "w6",
+    "id": "w6_season",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "spring",
+    "ipa": "/sprɪŋ/",
+    "vi": "mùa xuân",
+    "example": "Flowers bloom in spring.",
+    "weekId": "w6",
+    "id": "w6_spring",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "autumn",
+    "ipa": "/ˈɔːtəm/",
+    "vi": "mùa thu",
+    "example": "The weather is cool in autumn.",
+    "weekId": "w6",
+    "id": "w6_autumn",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "mild",
+    "ipa": "/maɪld/",
+    "vi": "ôn hòa",
+    "example": "The winter here is quite mild.",
+    "weekId": "w6",
+    "id": "w6_mild",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "freezing",
+    "ipa": "/ˈfriːzɪŋ/",
+    "vi": "lạnh cóng",
+    "example": "It was freezing outside.",
+    "weekId": "w6",
+    "id": "w6_freezing",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "wet",
+    "ipa": "/wet/",
+    "vi": "ẩm ướt",
+    "example": "The rainy season is very wet.",
+    "weekId": "w6",
+    "id": "w6_wet",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "dry",
+    "ipa": "/draɪ/",
+    "vi": "khô",
+    "example": "The climate is hot and dry.",
+    "weekId": "w6",
+    "id": "w6_dry",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "natural disaster",
+    "ipa": "/ˌnætʃrəl dɪˈzɑːstər/",
+    "vi": "thảm họa thiên nhiên",
+    "example": "Floods are common natural disasters.",
+    "weekId": "w6",
+    "id": "w6_natural_disaster",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "environment",
+    "ipa": "/ɪnˈvaɪrənmənt/",
+    "vi": "môi trường",
+    "example": "Climate change affects the environment.",
+    "weekId": "w6",
+    "id": "w6_environment",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "global warming",
+    "ipa": "/ˌɡloʊbl ˈwɔːrmɪŋ/",
+    "vi": "sự nóng lên toàn cầu",
+    "example": "Global warming is a serious problem.",
+    "weekId": "w6",
+    "id": "w6_global_warming",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "pollution",
+    "ipa": "/pəˈluːʃn/",
+    "vi": "ô nhiễm",
+    "example": "Air pollution is worse in large cities.",
+    "weekId": "w6",
+    "id": "w6_pollution",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "change",
+    "ipa": "/tʃeɪndʒ/",
+    "vi": "thay đổi",
+    "example": "Weather can change quickly.",
+    "weekId": "w6",
+    "id": "w6_change",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "predict",
+    "ipa": "/prɪˈdɪkt/",
+    "vi": "dự đoán",
+    "example": "It is difficult to predict the weather.",
+    "weekId": "w6",
+    "id": "w6_predict",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "protect",
+    "ipa": "/prəˈtekt/",
+    "vi": "bảo vệ",
+    "example": "We should protect the environment.",
+    "weekId": "w6",
+    "id": "w6_protect",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "seasonal",
+    "ipa": "/ˈsiːzənl/",
+    "vi": "theo mùa",
+    "example": "Some foods are only available seasonally.",
+    "weekId": "w6",
+    "id": "w6_seasonal",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "location",
+    "ipa": "/loʊˈkeɪʃn/",
+    "vi": "vị trí",
+    "example": "The hotel has an excellent location.",
+    "weekId": "w7",
+    "id": "w7_location",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "facility",
+    "ipa": "/fəˈsɪləti/",
+    "vi": "cơ sở vật chất, tiện nghi",
+    "example": "The building has modern facilities.",
+    "weekId": "w7",
+    "id": "w7_facility",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "household",
+    "ipa": "/ˈhaʊshoʊld/",
+    "vi": "hộ gia đình",
+    "example": "The average household has four people.",
+    "weekId": "w7",
+    "id": "w7_household",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "property",
+    "ipa": "/ˈprɒpərti/",
+    "vi": "bất động sản; tài sản",
+    "example": "Property prices are increasing.",
+    "weekId": "w7",
+    "id": "w7_property",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "owner",
+    "ipa": "/ˈoʊnər/",
+    "vi": "chủ sở hữu",
+    "example": "The owner is responsible for repairs.",
+    "weekId": "w7",
+    "id": "w7_owner",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "tenant",
+    "ipa": "/ˈtenənt/",
+    "vi": "người thuê nhà",
+    "example": "The tenant pays rent every month.",
+    "weekId": "w7",
+    "id": "w7_tenant",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "deposit",
+    "ipa": "/dɪˈpɒzɪt/",
+    "vi": "tiền đặt cọc",
+    "example": "The landlord requires a security deposit.",
+    "weekId": "w7",
+    "id": "w7_deposit",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "landlord",
+    "ipa": "/ˈlændlɔːrd/",
+    "vi": "chủ nhà",
+    "example": "The landlord repaired the kitchen.",
+    "weekId": "w7",
+    "id": "w7_landlord",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "repair",
+    "ipa": "/rɪˈpeər/",
+    "vi": "sửa chữa",
+    "example": "We need to repair the roof.",
+    "weekId": "w7",
+    "id": "w7_repair",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "equipment",
+    "ipa": "/ɪˈkwɪpmənt/",
+    "vi": "thiết bị",
+    "example": "The kitchen has modern equipment.",
+    "weekId": "w7",
+    "id": "w7_equipment",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "spacious",
+    "ipa": "/ˈspeɪʃəs/",
+    "vi": "rộng rãi",
+    "example": "The living room is spacious.",
+    "weekId": "w7",
+    "id": "w7_spacious",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "crowded",
+    "ipa": "/ˈkraʊdɪd/",
+    "vi": "đông đúc",
+    "example": "The city center is often crowded.",
+    "weekId": "w7",
+    "id": "w7_crowded",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "private",
+    "ipa": "/ˈpraɪvət/",
+    "vi": "riêng tư",
+    "example": "The house has a private garden.",
+    "weekId": "w7",
+    "id": "w7_private",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "public",
+    "ipa": "/ˈpʌblɪk/",
+    "vi": "công cộng",
+    "example": "There is a public park nearby.",
+    "weekId": "w7",
+    "id": "w7_public",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "suburb",
+    "ipa": "/ˈsʌbɜːrb/",
+    "vi": "ngoại ô",
+    "example": "They live in a quiet suburb.",
+    "weekId": "w7",
+    "id": "w7_suburb",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "urban",
+    "ipa": "/ˈɜːrbən/",
+    "vi": "thuộc đô thị",
+    "example": "Urban areas are becoming more crowded.",
+    "weekId": "w7",
+    "id": "w7_urban",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "rural",
+    "ipa": "/ˈrʊrəl/",
+    "vi": "thuộc nông thôn",
+    "example": "Many people prefer living in rural areas.",
+    "weekId": "w7",
+    "id": "w7_rural",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "neighbourhood",
+    "ipa": "/ˈneɪbərhʊd/",
+    "vi": "khu phố",
+    "example": "The neighbourhood is safe and quiet.",
+    "weekId": "w7",
+    "id": "w7_neighbourhood",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "disease",
+    "ipa": "/dɪˈziːz/",
+    "vi": "bệnh",
+    "example": "Heart disease can be prevented in some cases.",
+    "weekId": "w8",
+    "id": "w8_disease",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "illness",
+    "ipa": "/ˈɪlnəs/",
+    "vi": "bệnh tật",
+    "example": "He missed school because of illness.",
+    "weekId": "w8",
+    "id": "w8_illness",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "medicine",
+    "ipa": "/ˈmedɪsn/",
+    "vi": "thuốc",
+    "example": "Take this medicine after meals.",
+    "weekId": "w8",
+    "id": "w8_medicine",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "doctor",
+    "ipa": "/ˈdɒktər/",
+    "vi": "bác sĩ",
+    "example": "You should see a doctor.",
+    "weekId": "w8",
+    "id": "w8_doctor",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "hospital",
+    "ipa": "/ˈhɒspɪtl/",
+    "vi": "bệnh viện",
+    "example": "She works at a local hospital.",
+    "weekId": "w8",
+    "id": "w8_hospital",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "emergency",
+    "ipa": "/ɪˈmɜːrdʒənsi/",
+    "vi": "cấp cứu; tình huống khẩn cấp",
+    "example": "Call the emergency service if necessary.",
+    "weekId": "w8",
+    "id": "w8_emergency",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "injury",
+    "ipa": "/ˈɪndʒəri/",
+    "vi": "chấn thương",
+    "example": "He suffered a serious leg injury.",
+    "weekId": "w8",
+    "id": "w8_injury",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "pain",
+    "ipa": "/peɪn/",
+    "vi": "cơn đau",
+    "example": "I have pain in my back.",
+    "weekId": "w8",
+    "id": "w8_pain",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "ache",
+    "ipa": "/eɪk/",
+    "vi": "cơn đau âm ỉ",
+    "example": "I have a headache and a stomach ache.",
+    "weekId": "w8",
+    "id": "w8_ache",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "prevent",
+    "ipa": "/prɪˈvent/",
+    "vi": "phòng ngừa",
+    "example": "Exercise can help prevent disease.",
+    "weekId": "w8",
+    "id": "w8_prevent",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "recover",
+    "ipa": "/rɪˈkʌvər/",
+    "vi": "hồi phục",
+    "example": "She recovered quickly from the illness.",
+    "weekId": "w8",
+    "id": "w8_recover",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "avoid",
+    "ipa": "/əˈvɔɪd/",
+    "vi": "tránh",
+    "example": "You should avoid eating too much sugar.",
+    "weekId": "w8",
+    "id": "w8_avoid",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "stress",
+    "ipa": "/stres/",
+    "vi": "căng thẳng",
+    "example": "Too much stress can affect your health.",
+    "weekId": "w8",
+    "id": "w8_stress",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "anxiety",
+    "ipa": "/æŋˈzaɪəti/",
+    "vi": "lo âu",
+    "example": "Exercise can reduce anxiety.",
+    "weekId": "w8",
+    "id": "w8_anxiety",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "lifestyle",
+    "ipa": "/ˈlaɪfstaɪl/",
+    "vi": "lối sống",
+    "example": "A healthy lifestyle can prevent many diseases.",
+    "weekId": "w8",
+    "id": "w8_lifestyle",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "physical activity",
+    "ipa": "/ˌfɪzɪkl ækˈtɪvəti/",
+    "vi": "hoạt động thể chất",
+    "example": "Physical activity is important for good health.",
+    "weekId": "w8",
+    "id": "w8_physical_activity",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "mental health",
+    "ipa": "/ˌmentl ˈhelθ/",
+    "vi": "sức khỏe tinh thần",
+    "example": "Mental health is as important as physical health.",
+    "weekId": "w8",
+    "id": "w8_mental_health",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "obesity",
+    "ipa": "/oʊˈbiːsəti/",
+    "vi": "béo phì",
+    "example": "Obesity is a growing health problem.",
+    "weekId": "w8",
+    "id": "w8_obesity",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "contact",
+    "ipa": "/ˈkɒntækt/",
+    "vi": "liên hệ; thông tin liên lạc",
+    "example": "Please contact me by email.",
+    "weekId": "w1",
+    "id": "w1_contact_v2",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "graduate",
+    "ipa": "/ˈɡrædʒuət/",
+    "vi": "sinh viên tốt nghiệp; tốt nghiệp",
+    "example": "She graduated from university last year.",
+    "weekId": "w1",
+    "id": "w1_graduate_v2",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "affection",
+    "ipa": "/əˈfekʃn/",
+    "vi": "tình cảm, sự yêu mến",
+    "example": "Children need love and affection.",
+    "weekId": "w2",
+    "id": "w2_affection_v2",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "elderly",
+    "ipa": "/ˈeldərli/",
+    "vi": "người cao tuổi; cao tuổi",
+    "example": "We should take care of elderly family members.",
+    "weekId": "w2",
+    "id": "w2_elderly_v2",
+    "cat": "Family & Friends",
+    "level": 0
+  },
+  {
+    "en": "challenge",
+    "ipa": "/ˈtʃælɪndʒ/",
+    "vi": "thử thách",
+    "example": "Learning a new sport can be a challenge.",
+    "weekId": "w3",
+    "id": "w3_challenge_v2",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "competitive",
+    "ipa": "/kəmˈpetətɪv/",
+    "vi": "có tính cạnh tranh",
+    "example": "He is very competitive when playing sports.",
+    "weekId": "w3",
+    "id": "w3_competitive_v2",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "spectator",
+    "ipa": "/spekˈteɪtər/",
+    "vi": "khán giả",
+    "example": "Thousands of spectators watched the match.",
+    "weekId": "w3",
+    "id": "w3_spectator_v2",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "priority",
+    "ipa": "/praɪˈɔːrəti/",
+    "vi": "ưu tiên",
+    "example": "Health should be a priority.",
+    "weekId": "w4",
+    "id": "w4_priority_v2",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "efficient",
+    "ipa": "/ɪˈfɪʃnt/",
+    "vi": "hiệu quả",
+    "example": "Planning makes my work more efficient.",
+    "weekId": "w4",
+    "id": "w4_efficient_v2",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "organic",
+    "ipa": "/ɔːrˈɡænɪk/",
+    "vi": "hữu cơ",
+    "example": "Some people prefer organic food.",
+    "weekId": "w5",
+    "id": "w5_organic_v2",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "fibre",
+    "ipa": "/ˈfaɪbər/",
+    "vi": "chất xơ",
+    "example": "Fruit and vegetables are rich in fibre.",
+    "weekId": "w5",
+    "id": "w5_fibre_v2",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "additive",
+    "ipa": "/ˈædətɪv/",
+    "vi": "chất phụ gia",
+    "example": "Some processed foods contain artificial additives.",
+    "weekId": "w5",
+    "id": "w5_additive_v2",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "medical",
+    "ipa": "/ˈmedɪkl/",
+    "vi": "thuộc y tế; y khoa",
+    "example": "Everyone should have access to medical care.",
+    "weekId": "w8",
+    "id": "w8_medical_v2",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "pastime",
+    "ipa": "/ˈpɑːstaɪm/",
+    "vi": "hoạt động giải trí lúc rảnh",
+    "example": "Reading is a relaxing pastime.",
+    "weekId": "w3",
+    "id": "w3_pastime_v3",
+    "cat": "Hobbies & Sports",
+    "level": 0
+  },
+  {
+    "en": "timetable",
+    "ipa": "/ˈtaɪmteɪbl/",
+    "vi": "thời gian biểu",
+    "example": "I checked the class timetable.",
+    "weekId": "w4",
+    "id": "w4_timetable_v3",
+    "cat": "Daily Routines",
+    "level": 0
+  },
+  {
+    "en": "appetite",
+    "ipa": "/ˈæpɪtaɪt/",
+    "vi": "sự thèm ăn",
+    "example": "Regular exercise can improve your appetite.",
+    "weekId": "w5",
+    "id": "w5_appetite_v3",
+    "cat": "Food & Drinks",
+    "level": 0
+  },
+  {
+    "en": "breeze",
+    "ipa": "/briːz/",
+    "vi": "gió nhẹ",
+    "example": "A cool breeze came from the sea.",
+    "weekId": "w6",
+    "id": "w6_breeze_v3",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "forecasting",
+    "ipa": "/ˈfɔːrkæstɪŋ/",
+    "vi": "việc dự báo",
+    "example": "Weather forecasting has become more accurate.",
+    "weekId": "w6",
+    "id": "w6_forecasting_v3",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "weatherproof",
+    "ipa": "/ˈweðərpruːf/",
+    "vi": "chịu được thời tiết",
+    "example": "The building has a weatherproof roof.",
+    "weekId": "w6",
+    "id": "w6_weatherproof_v3",
+    "cat": "Weather & Seasons",
+    "level": 0
+  },
+  {
+    "en": "balcony",
+    "ipa": "/ˈbælkəni/",
+    "vi": "ban công",
+    "example": "The apartment has a small balcony.",
+    "weekId": "w7",
+    "id": "w7_balcony_v3",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "ceiling",
+    "ipa": "/ˈsiːlɪŋ/",
+    "vi": "trần nhà",
+    "example": "The room has a high ceiling.",
+    "weekId": "w7",
+    "id": "w7_ceiling_v3",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "corridor",
+    "ipa": "/ˈkɒrɪdɔːr/",
+    "vi": "hành lang",
+    "example": "The bedrooms are along the corridor.",
+    "weekId": "w7",
+    "id": "w7_corridor_v3",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "electricity",
+    "ipa": "/ɪˌlekˈtrɪsəti/",
+    "vi": "điện",
+    "example": "The rent does not include electricity.",
+    "weekId": "w7",
+    "id": "w7_electricity_v3",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "maintenance",
+    "ipa": "/ˈmeɪntənəns/",
+    "vi": "sự bảo trì, bảo dưỡng",
+    "example": "The building requires regular maintenance.",
+    "weekId": "w7",
+    "id": "w7_maintenance_v3",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "security",
+    "ipa": "/sɪˈkjʊərəti/",
+    "vi": "an ninh, sự an toàn",
+    "example": "The apartment has good security.",
+    "weekId": "w7",
+    "id": "w7_security_v3",
+    "cat": "Accommodation & Home",
+    "level": 0
+  },
+  {
+    "en": "immune",
+    "ipa": "/ɪˈmjuːn/",
+    "vi": "miễn dịch",
+    "example": "Regular sleep helps keep the immune system strong.",
+    "weekId": "w8",
+    "id": "w8_immune_v3",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "infection",
+    "ipa": "/ɪnˈfekʃn/",
+    "vi": "nhiễm trùng",
+    "example": "The doctor tested for an infection.",
+    "weekId": "w8",
+    "id": "w8_infection_v3",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "recovery",
+    "ipa": "/rɪˈkʌvəri/",
+    "vi": "sự hồi phục",
+    "example": "She made a quick recovery.",
+    "weekId": "w8",
+    "id": "w8_recovery_v3",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "birthplace",
+    "ipa": "/ˈbɜːrθpleɪs/",
+    "vi": "nơi sinh",
+    "example": "Hanoi is my birthplace.",
+    "weekId": "w1",
+    "id": "w1_birthplace_v4",
+    "cat": "Personal Information",
+    "level": 0
+  },
+  {
+    "en": "well-being",
+    "ipa": "/ˌwel ˈbiːɪŋ/",
+    "vi": "sức khỏe và trạng thái tinh thần tốt",
+    "example": "Exercise is good for your overall well-being.",
+    "weekId": "w8",
+    "id": "w8_well_being_v4",
+    "cat": "Health & Body",
+    "level": 0
+  },
+  {
+    "en": "heal",
+    "ipa": "/hiːl/",
+    "vi": "chữa lành, hồi phục",
+    "example": "The body needs time to heal after an injury.",
+    "weekId": "w8",
+    "id": "w8_heal_v4",
+    "cat": "Health & Body",
+    "level": 0
+  }
+];
 
   function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
   function slug(s){ return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
@@ -700,6 +3710,7 @@
     renderChips();
     renderWordList();
     renderCatSelects();
+    refreshBeginnerStats();
   }
   function renderCatSelects(){
     const cats = topics();
@@ -795,6 +3806,18 @@
     document.getElementById('flashSetup').style.display='flex';
   });
 
+
+  // ---------- Beginner daily lesson ----------
+  let beginnerQueue=[], beginnerIdx=0, beginnerDoneCount=0, beginnerRevealed=false;
+  function todayKey(){return new Date().toISOString().slice(0,10)}
+  function updateStudyStreak(){const key='vocab:study:last', sk='vocab:study:streak', today=todayKey(), last=localStorage.getItem(key); let streak=Number(localStorage.getItem(sk)||0); if(last!==today){if(last){const diff=Math.round((new Date(today+'T00:00:00')-new Date(last+'T00:00:00'))/86400000); streak=diff===1?streak+1:1}else streak=1; localStorage.setItem(key,today);localStorage.setItem(sk,String(streak));} const el=document.getElementById('studyStreak');if(el)el.textContent=`🔥 Ngày học liên tiếp: ${streak}`}
+  function refreshBeginnerStats(){const known=words.filter(w=>(w.level||0)>=4).length;const due=words.filter(w=>(w.level||0)<4);document.getElementById('todayKnown').textContent=known;document.getElementById('todayNew').textContent=Math.min(10,due.length)}
+  function startBeginner(){const pool=words.filter(w=>(w.level||0)<4).sort((a,b)=>(a.level||0)-(b.level||0)).slice(0,10);beginnerQueue=shuffle(pool);beginnerIdx=0;beginnerDoneCount=0;document.getElementById('beginnerSession').style.display=pool.length?'block':'none';document.getElementById('beginnerDone').style.display=pool.length?'none':'block';if(!pool.length){document.getElementById('beginnerDoneMsg').textContent='🎉 Bạn đã đạt level 4+ cho toàn bộ từ hiện có!';return}showBeginnerWord();updateStudyStreak()}
+  function showBeginnerWord(){const w=beginnerQueue[beginnerIdx];beginnerRevealed=false;document.getElementById('learnTopic').textContent=wordTopic(w);document.getElementById('learnVi').textContent=w.vi;document.getElementById('learnEn').textContent='•••';document.getElementById('learnIpa').textContent='';document.getElementById('learnExample').textContent='Ví dụ sẽ hiện sau khi bạn xem từ tiếng Anh.';document.getElementById('revealBtn').style.display='block';document.getElementById('learnActions').style.display='none';document.getElementById('revealBtn').textContent=`👀 Hiện từ tiếng Anh (${beginnerIdx+1}/10)`}
+  document.getElementById('revealBtn').addEventListener('click',()=>{const w=beginnerQueue[beginnerIdx];beginnerRevealed=true;document.getElementById('learnEn').textContent=w.en;document.getElementById('learnIpa').textContent=w.ipa||'';document.getElementById('learnExample').textContent=w.example||'';document.getElementById('revealBtn').style.display='none';document.getElementById('learnActions').style.display='grid'});
+  document.getElementById('speakBtn').addEventListener('click',()=>{if(!beginnerQueue.length)return;const w=beginnerQueue[beginnerIdx];if('speechSynthesis' in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w.en);u.lang='en-US';u.rate=.78;speechSynthesis.speak(u)}else alert('Trình duyệt này chưa hỗ trợ đọc thành tiếng.')});
+  async function beginnerAnswer(ok){if(!beginnerRevealed)return;const w=beginnerQueue[beginnerIdx],target=words.find(x=>x.id===w.id);if(target)target.level=Math.max(0,Math.min(5,(target.level||0)+(ok?1:-1)));await saveWords();beginnerDoneCount+=ok?1:0;beginnerIdx++;if(beginnerIdx>=beginnerQueue.length){document.getElementById('beginnerSession').style.display='none';document.getElementById('beginnerDone').style.display='block';document.getElementById('beginnerDoneMsg').textContent=`🎉 Hoàn thành ${beginnerQueue.length} từ hôm nay — nhớ đúng ${beginnerDoneCount} từ.`;refreshAll()}else{showBeginnerWord();refreshBeginnerStats()}}
+  document.getElementById('againBtn').addEventListener('click',()=>beginnerAnswer(false));document.getElementById('easyBtn').addEventListener('click',()=>beginnerAnswer(true));document.getElementById('beginnerRestart').addEventListener('click',startBeginner);
   // ---------- Quiz ----------
   let quizQueue = [], quizIdx = 0, quizScore = 0, quizDir = 'en2vi';
   document.getElementById('quizStart').addEventListener('click', ()=>{
@@ -897,8 +3920,10 @@
     await loadWords();
     refreshAll();
     await tryRestoreFolder();
+    startBeginner();
   })();
 })();
+  if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}
 </script>
 </body>
 </html>
