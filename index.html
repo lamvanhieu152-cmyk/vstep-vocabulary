@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sổ Từ Vựng VSTEP — Học từ cho người mới bắt đầu</title>
+<title>Sổ Từ Vựng VSTEP V3 — Học từ cho người mới bắt đầu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
@@ -87,6 +87,8 @@
     border:none; border-radius:7px; padding:11px 18px; transition: transform .12s ease, opacity .12s ease;
   }
   .btn:active{ transform: scale(0.97); }
+  button,input,select{touch-action:manipulation;}
+  button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold-dim);outline-offset:2px;}
   .btn-primary{ background: var(--ink); color: var(--paper); }
   .btn-primary:hover{ opacity:.88; }
   .btn-ghost{ background: transparent; color:#6b6455; border:1.5px solid #d9d0b8; }
@@ -185,6 +187,26 @@
     .week-desc{ display:none; }
   }
 
+  /* V3 beginner UX */
+  .study-guide{margin-top:14px;padding:14px 16px;border-radius:10px;background:#f1ead8;border:1px solid #ddd4b8}
+  .study-guide-title{font-family:'Fraunces',serif;font-weight:600;font-size:17px;margin-bottom:8px}
+  .study-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .study-step{background:#fffdf7;border-radius:8px;padding:9px;font-size:12px;color:#514a3c;line-height:1.4}
+  .study-step b{display:block;color:var(--ink);margin-bottom:2px}
+  .daily-control{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+  .daily-control select{width:auto;min-width:120px;padding:7px 9px;font-size:12px}
+  .mastery-bar{height:7px;background:#e8e0cd;border-radius:999px;overflow:hidden;margin-top:7px}
+  .mastery-fill{height:100%;background:var(--sage-dim);border-radius:999px}
+  .weak-box{margin-top:14px;border-top:1px dashed #d9d0b8;padding-top:12px}
+  .weak-title{font-family:'Fraunces',serif;font-weight:600;margin-bottom:7px}
+  .weak-list{display:grid;gap:6px}
+  .weak-item{display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:7px 9px;background:#fffdf7;border-radius:7px}
+  .weak-item span:last-child{color:#8f742a;font-family:'IBM Plex Mono',monospace}
+  .spelling{margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:1.5px;color:#514a3c;background:#f4efe3;padding:8px;border-radius:7px;display:none}
+  .footer{margin-top:18px;text-align:center;color:rgba(244,239,227,.55);font-size:12px;letter-spacing:.03em}
+  .footer strong{color:var(--gold);font-weight:600}
+  @media(max-width:600px){.study-steps{grid-template-columns:1fr}.study-step{padding:8px}.footer{font-size:11px}}
+
   /* Beginner mode */
   .beginner-box{background:#fffdf7;border:1.5px solid #d9d0b8;border-radius:10px;padding:18px;margin-bottom:18px}
   .beginner-title{font-family:'Fraunces',serif;font-size:25px;margin:0 0 5px}.beginner-sub{color:#6b6455;font-size:13px;line-height:1.6;margin:0 0 14px}
@@ -199,7 +221,7 @@
 <body>
 <div class="app">
   <header>
-    <p class="eyebrow">Lộ trình 900 từ · 6 tháng · 24 tuần</p>
+    <p class="eyebrow">Lộ trình 900 từ · 6 tháng · 24 tuần · V3</p>
     <h1>Sổ Từ Vựng</h1>
     <p class="tagline">Theo sát lộ trình 3 giai đoạn của bạn: thêm từ theo đúng tuần, ôn bằng thẻ ghi nhớ và tự kiểm tra.</p>
     <div class="goal-track"><div class="goal-fill" id="goalFill"></div></div>
@@ -232,6 +254,30 @@
         <div class="streak" id="studyStreak">🔥 Ngày học liên tiếp: 0</div>
       </div>
 
+      <div class="study-guide">
+        <div class="study-guide-title">📖 Cách học mỗi ngày — khoảng 15–20 phút</div>
+        <div class="study-steps">
+          <div class="study-step"><b>1. Nghe</b>Nhấn 🔊 và nghe từ 2–3 lần.</div>
+          <div class="study-step"><b>2. Nhìn & đọc</b>Hiện từ, nhìn IPA và đọc thành tiếng.</div>
+          <div class="study-step"><b>3. Nhớ lại</b>Che lại trong đầu, gõ thử rồi chọn mức nhớ.</div>
+        </div>
+        <div class="daily-control">
+          <label style="margin:0;">Mục tiêu hôm nay</label>
+          <select id="dailyLimit" aria-label="Số từ nên học mỗi ngày">
+            <option value="5">5 từ</option>
+            <option value="10" selected>10 từ</option>
+            <option value="15">15 từ</option>
+            <option value="20">20 từ</option>
+          </select>
+          <span style="font-size:11px;color:#6b6455;">Người mới nên bắt đầu với 5–10 từ.</span>
+        </div>
+      </div>
+
+      <div class="weak-box">
+        <div class="weak-title">🎯 3 từ cần chú ý nhất</div>
+        <div class="weak-list" id="weakList"></div>
+      </div>
+
       <div id="beginnerSession">
         <div class="study-meta"><span id="learnCounter">Từ 1 / 10</span><span id="learnType">Từ mới</span></div>
         <div class="study-progress"><div class="study-progress-fill" id="studyProgressFill" style="width:0%"></div></div>
@@ -241,6 +287,7 @@
           <div class="stage-chip" id="learnStage">Bước 1/3 · Nghe và nhìn nghĩa</div>
           <div class="learn-en" id="learnEn">•••</div>
           <div class="learn-ipa" id="learnIpa"></div>
+          <div class="spelling" id="learnSpelling"></div>
           <div class="mini-actions">
             <button class="btn btn-ghost btn-small" id="speakBtn">🔊 Nghe từ</button>
             <button class="btn btn-ghost btn-small" id="slowSpeakBtn">🐢 Nghe chậm</button>
@@ -384,6 +431,7 @@
       </div>
     </section>
   </main>
+  <div class="footer">Sổ Từ Vựng VSTEP · Dành cho việc học cá nhân · <strong>Lâm Văn Hiệu</strong></div>
 </div>
 
 <script>
@@ -3747,6 +3795,7 @@
     renderWordList();
     renderCatSelects();
     refreshBeginnerStats();
+    renderWeakWords();
   }
   function renderCatSelects(){
     const cats = topics();
@@ -3846,7 +3895,7 @@
   // ---------- Beginner daily lesson: light spaced repetition ----------
   let beginnerQueue=[], beginnerIdx=0, beginnerDoneCount=0, beginnerCorrectCount=0, beginnerRevealed=false;
   const REVIEW_DAYS = [0, 1, 3, 7, 14, 30];
-  function dateKey(d=new Date()){ return d.toISOString().slice(0,10); }
+  function dateKey(d=new Date()){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
   function addDays(dateStr, days){ const d=new Date(dateStr+'T00:00:00'); d.setDate(d.getDate()+days); return dateKey(d); }
   function ensureReviewFields(w){ if(typeof w.level!=='number') w.level=0; if(!w.lastReviewed) w.lastReviewed=''; if(!w.nextReview) w.nextReview=w.level>0?addDays(dateKey(),REVIEW_DAYS[Math.min(5,w.level)]):dateKey(); return w; }
   function recordStudy(correct){
@@ -3855,14 +3904,30 @@
     let s={done:0,correct:0}; try{s=JSON.parse(localStorage.getItem(k)||'{}')||s}catch(e){}
     s.done=(s.done||0)+1; s.correct=(s.correct||0)+(correct?1:0); localStorage.setItem(k,JSON.stringify(s));
   }
+  function dailyLimit(){
+    const raw=Number(localStorage.getItem('vocab:dailyLimit')||10);
+    return [5,10,15,20].includes(raw)?raw:10;
+  }
   function studyStats(){
-    const today=dateKey(); let s={done:0,correct:0}; try{s=JSON.parse(localStorage.getItem('vocab:study:'+today)||'{}')||s}catch(e){}
+    const today=dateKey(); let s={done:0,correct:0};
+    try{s=JSON.parse(localStorage.getItem('vocab:study:'+today)||'{}')||s}catch(e){}
     const known=words.filter(w=>(w.level||0)>=4).length;
     const reviewDue=words.filter(w=>(w.nextReview||today)<=today && (w.level||0)>0).length;
     const newWords=words.filter(w=>(w.level||0)===0).length;
-    const toStudy=Math.min(10, reviewDue + newWords);
+    const remaining=Math.max(0,dailyLimit()-(s.done||0));
+    const toStudy=Math.min(remaining, reviewDue + newWords);
     const els={todayNew:toStudy,todayKnown:known,todayDone:s.done||0,todayCorrect:s.correct||0,todayReview:reviewDue};
     Object.entries(els).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=val});
+    const sel=document.getElementById('dailyLimit'); if(sel)sel.value=String(dailyLimit());
+  }
+  function renderWeakWords(){
+    const el=document.getElementById('weakList'); if(!el)return;
+    const list=[...words].sort((a,b)=>{
+      const la=a.level||0, lb=b.level||0;
+      if(la!==lb)return la-lb;
+      return (a.lastReviewed||'').localeCompare(b.lastReviewed||'');
+    }).slice(0,3);
+    el.innerHTML=list.length?list.map(w=>`<div class="weak-item"><span>${escapeHtml(w.en)}</span><span>level ${w.level||0}/5</span></div>`).join(''):'<div class="weak-item"><span>Chưa có dữ liệu</span><span>—</span></div>';
   }
   function updateStudyStreak(){
     const today=dateKey(); let streak=0;
@@ -3873,14 +3938,15 @@
     const today=dateKey(); words.forEach(ensureReviewFields);
     const due=shuffle(words.filter(w=>(w.level||0)>0 && (w.nextReview||today)<=today)).sort((a,b)=>(a.level||0)-(b.level||0));
     const fresh=shuffle(words.filter(w=>(w.level||0)===0));
-    return [...due,...fresh].slice(0,10);
+    return [...due,...fresh].slice(0,dailyLimit());
   }
   function startBeginner(){
     words.forEach(ensureReviewFields);
-    beginnerQueue=chooseBeginnerPool(); beginnerIdx=0; beginnerDoneCount=0; beginnerCorrectCount=0;
+    const today=dateKey(); let s={done:0}; try{s=JSON.parse(localStorage.getItem('vocab:study:'+today)||'{}')||s}catch(e){}
+    beginnerQueue=((s.done||0)>=dailyLimit())?[]:chooseBeginnerPool(); beginnerIdx=0; beginnerDoneCount=0; beginnerCorrectCount=0;
     document.getElementById('beginnerSession').style.display=beginnerQueue.length?'block':'none';
     document.getElementById('beginnerDone').style.display=beginnerQueue.length?'none':'block';
-    if(!beginnerQueue.length){ document.getElementById('beginnerDoneMsg').textContent='🎉 Bạn đã hoàn thành toàn bộ từ hiện có!'; studyStats(); return; }
+    if(!beginnerQueue.length){ const today=dateKey(); let s={done:0}; try{s=JSON.parse(localStorage.getItem('vocab:study:'+today)||'{}')||s}catch(e){}; document.getElementById('beginnerDoneMsg').textContent=(s.done||0)>=dailyLimit()?`✅ Bạn đã hoàn thành mục tiêu ${dailyLimit()} từ hôm nay!`:'🎉 Bạn đã hoàn thành toàn bộ từ hiện có!'; studyStats(); renderWeakWords(); return; }
     showBeginnerWord(); studyStats(); updateStudyStreak();
   }
   function showBeginnerWord(){
@@ -3889,7 +3955,8 @@
     document.getElementById('learnVi').textContent=w.vi;
     document.getElementById('learnEn').textContent='•••';
     document.getElementById('learnIpa').textContent='';
-    document.getElementById('learnExample').textContent='Bước 1: nghe từ (nếu muốn), sau đó tự đoán từ tiếng Anh.';
+    const sp=document.getElementById('learnSpelling'); sp.style.display='none'; sp.textContent='';
+    document.getElementById('learnExample').textContent='Bước 1: nghe từ 2–3 lần, nhìn nghĩa và thử đoán từ tiếng Anh.';
     document.getElementById('learnStage').textContent='Bước 1/3 · Nghe và nhớ';
     document.getElementById('revealBtn').style.display='block';
     document.getElementById('learnActions').style.display='none';
@@ -3910,6 +3977,7 @@
   document.getElementById('revealBtn').addEventListener('click',()=>{
     const w=beginnerQueue[beginnerIdx]; beginnerRevealed=true;
     document.getElementById('learnEn').textContent=w.en; document.getElementById('learnIpa').textContent=w.ipa||'';
+    const sp=document.getElementById('learnSpelling'); sp.textContent='✍️ Đánh vần: '+w.en.split('').join(' · '); sp.style.display='block';
     document.getElementById('learnExample').textContent=w.example||'';
     document.getElementById('learnStage').textContent='Bước 2/3 · Đọc từ + nghe lại';
     document.getElementById('revealBtn').style.display='none'; document.getElementById('learnActions').style.display='grid'; document.getElementById('recallBox').style.display='block';
@@ -3932,6 +4000,7 @@
   document.getElementById('againBtn').addEventListener('click',()=>beginnerAnswer(false));
   document.getElementById('easyBtn').addEventListener('click',()=>beginnerAnswer(true));
   document.getElementById('beginnerRestart').addEventListener('click',startBeginner);
+  document.getElementById('dailyLimit').addEventListener('change',(e)=>{ localStorage.setItem('vocab:dailyLimit', String(Number(e.target.value)||10)); studyStats(); startBeginner(); });
   document.addEventListener('keydown',(e)=>{
     if(document.getElementById('tab-beginner').classList.contains('active')){
       if(e.key===' ' && beginnerQueue.length && !beginnerRevealed){e.preventDefault();document.getElementById('revealBtn').click();}
@@ -4027,6 +4096,7 @@
         });
       } else {
         words = incoming.map(w=> w.id ? w : {...w, id: uid()});
+        words.forEach(ensureReviewFields);
       }
       words.forEach(migrate);
       await saveWords();
